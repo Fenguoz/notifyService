@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+   <meta charset="utf-8">
+   <title>菜鸟教程(runoob.com)</title>
+    
+      <script type="text/javascript">
+         function WebSocketTest() {
+        if ("WebSocket" in window) {
+            console.log("您的浏览器支持 WebSocket!");
+            var num = 0
+
+            // 打开一个 web socket
+            var ws = new WebSocket("ws://127.0.0.1:9601");
+
+            ws.onopen = function () {
+                // Web Socket 已连接上，使用 send() 方法发送数据
+                alert("数据发送中...");
+                ws.send('{"Authorization":"USER eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjU1MjEzMGZlNGUzMjhjOGMyNmQ1NjQyMTRiZjg1MDgwNWFlODllODY1YTM1YzA5ZGIzNmFjMzc3YjAwYmEwMWE4NDZjOTUzNjhkYTFkYTI0In0.eyJhdWQiOiIxIiwianRpIjoiNTUyMTMwZmU0ZTMyOGM4YzI2ZDU2NDIxNGJmODUwODA1YWU4OWU4NjVhMzVjMDlkYjM2YWMzNzdiMDBiYTAxYTg0NmM5NTM2OGRhMWRhMjQiLCJpYXQiOjE1ODk3OTY4NzUsIm5iZiI6MTU4OTc5Njg3NSwiZXhwIjoxNTkwNDAxNjc1LCJzdWIiOiIyNzYiLCJzY29wZXMiOlsiKiJdfQ.sTFWlGsvLJ0yqievIa3wjXaNayZuBoFA-3vpPGCFuEHJKR1hXfzeKbQ1CotPdLFG-2HT9789CCeoY4YpxIMIIqA4hN5pRBtkHf_M0iifym3Rohs0a1TDmV3ZbqaI8bqk3EIkWy5KRY19P0j1mRj-sAVvj5V-YkLVlKkagy3eTScRVFxLiF7ESu17efj6sUKhEeDRYn9EElzcy6mNQ_ModUXi48ND3KCGTXZLMwMvI2a6WaW2E39T8gxit_OrFS4JVUn623YuSU_Ard0_vQGQRUqyXiVMKE-ZOd9q4p2cN5STYB0r9Ymx0qNKVlpg-_5kS6UHhWfvIbzjUEvel6lg4zgFVJ51eDtAc4nkigbyhKjCFm8lEBRckUFebY8n-22mIiglXRrq5RlHu7drZPEbcSyWGxhSrsaAb2DSXdSv4UxgevpmPrNHqGTP112CmrBx-VH3DGKG2KF9j7UhOBYQnZEjp74tRaGYToEQ_OmSMG-vwWGs9rNCMltm22e42SakWp-Ec9O3JgTvalydCaJMb7SaIkX_OsvYShYTcZPG7v_NHoL2cXdHTz4jjADwFalaMUMo-48czryf-V8jc-dB_4ljEBYAZL0zekn_6JLC2NXAyfKC5-OUalgypX57GQZhBAMvlaA6-TTpYGSEl_aO7aua-SvpF-Ua2H8CYcsWhvk"}');
+            };
+
+            window.setInterval(function () { //每隔5秒钟发送一次心跳，避免websocket连接因超时而自动断开
+                var data = {"Authorization":"USER eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjU1MjEzMGZlNGUzMjhjOGMyNmQ1NjQyMTRiZjg1MDgwNWFlODllODY1YTM1YzA5ZGIzNmFjMzc3YjAwYmEwMWE4NDZjOTUzNjhkYTFkYTI0In0.eyJhdWQiOiIxIiwianRpIjoiNTUyMTMwZmU0ZTMyOGM4YzI2ZDU2NDIxNGJmODUwODA1YWU4OWU4NjVhMzVjMDlkYjM2YWMzNzdiMDBiYTAxYTg0NmM5NTM2OGRhMWRhMjQiLCJpYXQiOjE1ODk3OTY4NzUsIm5iZiI6MTU4OTc5Njg3NSwiZXhwIjoxNTkwNDAxNjc1LCJzdWIiOiIyNzYiLCJzY29wZXMiOlsiKiJdfQ.sTFWlGsvLJ0yqievIa3wjXaNayZuBoFA-3vpPGCFuEHJKR1hXfzeKbQ1CotPdLFG-2HT9789CCeoY4YpxIMIIqA4hN5pRBtkHf_M0iifym3Rohs0a1TDmV3ZbqaI8bqk3EIkWy5KRY19P0j1mRj-sAVvj5V-YkLVlKkagy3eTScRVFxLiF7ESu17efj6sUKhEeDRYn9EElzcy6mNQ_ModUXi48ND3KCGTXZLMwMvI2a6WaW2E39T8gxit_OrFS4JVUn623YuSU_Ard0_vQGQRUqyXiVMKE-ZOd9q4p2cN5STYB0r9Ymx0qNKVlpg-_5kS6UHhWfvIbzjUEvel6lg4zgFVJ51eDtAc4nkigbyhKjCFm8lEBRckUFebY8n-22mIiglXRrq5RlHu7drZPEbcSyWGxhSrsaAb2DSXdSv4UxgevpmPrNHqGTP112CmrBx-VH3DGKG2KF9j7UhOBYQnZEjp74tRaGYToEQ_OmSMG-vwWGs9rNCMltm22e42SakWp-Ec9O3JgTvalydCaJMb7SaIkX_OsvYShYTcZPG7v_NHoL2cXdHTz4jjADwFalaMUMo-48czryf-V8jc-dB_4ljEBYAZL0zekn_6JLC2NXAyfKC5-OUalgypX57GQZhBAMvlaA6-TTpYGSEl_aO7aua-SvpF-Ua2H8CYcsWhvk"};
+                ws.send(JSON.stringify(data));
+            }, 5000);
+
+            ws.onmessage = function (evt) {
+                console.log(evt.data);
+                var received_msg = evt.data;
+                alert(evt.data);
+            };
+
+            ws.error = function (e) {
+                console.log(e)
+                alert(e)
+            }
+            ws.onclose = function () {
+                // 关闭 websocket
+                alert("连接已关闭...");
+            };
+        } else {
+            alert("您的浏览器不支持 WebSocket!");
+        }
+    }
+      </script>
+        
+   </head>
+   <body>
+   
+      <div id="sse">
+         <a href="javascript:WebSocketTest()">运行 WebSocket</a>
+      </div>
+      
+   </body>
+</html>

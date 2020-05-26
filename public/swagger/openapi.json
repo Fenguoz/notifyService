@@ -1,0 +1,501 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "消息服务APi",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:9501",
+            "description": "本地"
+        }
+    ],
+    "paths": {
+        "/post.usersend": {
+            "post": {
+                "tags": [
+                    "消息"
+                ],
+                "summary": "消息发送（用户角色）",
+                "description": "消息发送",
+                "operationId": "userSend",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/target_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subscription_type_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/template_param"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/post.adminsend": {
+            "post": {
+                "tags": [
+                    "消息"
+                ],
+                "summary": "消息发送（管理员角色）",
+                "description": "消息发送",
+                "operationId": "adminSend",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/receiver_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/target_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subscription_type_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/template_param"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/get.my.subscription": {
+            "get": {
+                "tags": [
+                    "订阅"
+                ],
+                "summary": "获取我的订阅",
+                "description": "获取我的订阅",
+                "operationId": "my",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/post.subscribing": {
+            "post": {
+                "tags": [
+                    "订阅"
+                ],
+                "summary": "订阅",
+                "description": "订阅",
+                "operationId": "subscribing",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/target_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subscription_type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subscription_type_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/delete.subscription": {
+            "delete": {
+                "tags": [
+                    "订阅"
+                ],
+                "summary": "取消订阅",
+                "description": "取消订阅",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/get.subscription.list": {
+            "get": {
+                "tags": [
+                    "订阅"
+                ],
+                "summary": "获取订阅列表",
+                "description": "获取订阅列表",
+                "operationId": "list",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "success": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "status": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "1"
+                            },
+                            "msg": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "type": "object",
+                                "allOf": []
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "error": {
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "msg": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "id": {
+                "name": "id",
+                "in": "query",
+                "description": "id",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "page": {
+                "name": "page",
+                "in": "query",
+                "description": "页数",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "count": {
+                "name": "count",
+                "in": "query",
+                "description": "条数",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "order_by": {
+                "name": "order_by",
+                "in": "query",
+                "description": "排序字段(默认:id)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "order": {
+                "name": "order",
+                "in": "query",
+                "description": "排序规则(默认:desc)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "start_time": {
+                "name": "start_time",
+                "in": "query",
+                "description": "开始时间戳",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "end_time": {
+                "name": "end_time",
+                "in": "query",
+                "description": "结束时间戳",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "version": {
+                "name": "version",
+                "in": "query",
+                "description": "版本(默认1.0.0)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "device": {
+                "name": "device",
+                "in": "query",
+                "description": "设备(默认:android,ios)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "version_type": {
+                "name": "version_type",
+                "in": "query",
+                "description": "设备类型(base,alpha,beta,默认:RC,release)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "amount": {
+                "name": "amount",
+                "in": "query",
+                "description": "数量",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "number": {
+                "name": "number",
+                "in": "query",
+                "description": "数量",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "remark": {
+                "name": "remark",
+                "in": "query",
+                "description": "备注",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "keyword": {
+                "name": "keyword",
+                "in": "query",
+                "description": "关键词",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "type_id": {
+                "name": "type_id",
+                "in": "query",
+                "description": "账单类型ID",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "number_min": {
+                "name": "number_min",
+                "in": "query",
+                "description": "最小数量",
+                "required": false,
+                "schema": {
+                    "type": "float"
+                }
+            },
+            "number_max": {
+                "name": "number_max",
+                "in": "query",
+                "description": "最大数量",
+                "required": false,
+                "schema": {
+                    "type": "float"
+                }
+            },
+            "target_id": {
+                "name": "target_id",
+                "in": "query",
+                "description": "目标的ID(比如文章ID)",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "subscription_type_id": {
+                "name": "type_id",
+                "in": "query",
+                "description": "订阅类型ID",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "subscription_type": {
+                "name": "type",
+                "in": "query",
+                "description": "订阅类型(默认event,topic)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "receiver_id": {
+                "name": "receiver_id",
+                "in": "query",
+                "description": "接收者ID",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "receiver_type": {
+                "name": "receiver_type",
+                "in": "query",
+                "description": "接收者类型(默认user,admin)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "template_param": {
+                "name": "template_param",
+                "in": "query",
+                "description": "扩展参数(json字符串)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+        "securitySchemes": {
+            "Authorization": {
+                "type": "apiKey",
+                "description": "Token检验",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
