@@ -61,7 +61,11 @@ class RemindPublicLoginConsumer extends ConsumerMessage
             $user_key = 'ws_' . $param['receiver_type'] . '_' . $param['receiver_id'];
             $fd = $redis->get($user_key);
             if($fd){
-                $result = $server->push((int) $fd, json_encode($v));
+                $result = $server->push((int) $fd, json_encode([
+                    'code' => 200,
+                    'message' => 'success',
+                    'data' => $v
+                ]));
                 if ($result == 1) { //推送成功
                     $this->notifyService->read($v->id);
                 } else { //推送失败

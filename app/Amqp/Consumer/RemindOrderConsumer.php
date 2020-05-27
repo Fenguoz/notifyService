@@ -80,7 +80,11 @@ class RemindOrderConsumer extends ConsumerMessage
 
             $fd = $redis->get($user_key);
             if($fd){
-                $result = $server->push((int) $fd, json_encode($mq_data));
+                $result = $server->push((int) $fd, json_encode([
+                    'code' => 200,
+                    'message' => 'success',
+                    'data' => $mq_data
+                ]));
                 if ($result == 1) { //推送成功
                     //to do ...
                 } else { //推送失败
