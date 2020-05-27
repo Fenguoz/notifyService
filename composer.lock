@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08d386ee407732f22995770abd24df1c",
+    "content-hash": "0b2df850cc2594c11a2d6e2f75a36517",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -366,6 +366,52 @@
                 "response"
             ],
             "time": "2020-02-05T20:36:27+00:00"
+        },
+        {
+            "name": "getuilaboratory/getui-pushapi-php-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GetuiLaboratory/getui-pushapi-php-client.git",
+                "reference": "ccaf21c6b99860b7008d5f6bdd122444e1284432"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GetuiLaboratory/getui-pushapi-php-client/zipball/ccaf21c6b99860b7008d5f6bdd122444e1284432",
+                "reference": "ccaf21c6b99860b7008d5f6bdd122444e1284432",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "getui",
+                    "homepage": "https://www.getui.com/cn"
+                }
+            ],
+            "description": "getui php client",
+            "homepage": "https://www.getui.com/cn/",
+            "keywords": [
+                "GeTui",
+                "GetuiLaboratory",
+                "getui-pushapi-php-client",
+                "pushapi"
+            ],
+            "time": "2019-08-19T02:41:41+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -9060,7 +9106,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "getuilaboratory/getui-pushapi-php-client": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

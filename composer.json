@@ -29,7 +29,8 @@
         "hyperf/websocket-server": "^1.1",
         "hyperf/constants": "^1.1",
         "hyperf/swagger": "^1.1",
-        "hyperf/crontab": "^1.1"
+        "hyperf/crontab": "^1.1",
+        "getuilaboratory/getui-pushapi-php-client": "dev-master"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",
