@@ -88,6 +88,11 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
         $this->redis->expire($frame_key, 7200);
         $this->redis->expire($user_key, 7200);
 
+        $server->push($frame->fd, json_encode([
+            'code' => 200,
+            'message' => 'sucess',
+        ]));
+
         $open_fd = $this->redis->get('ws_open_fd_' . $frame->fd);
         if($open_fd == 1){//推送上线
             $this->redis->set('ws_open_fd_' . $frame->fd, 0);
