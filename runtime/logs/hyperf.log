@@ -299,3 +299,7 @@
 [2020-05-23 02:16:01] sql.INFO: [0.5] update `notify` set `is_read` = '1', `notify`.`updated_at` = '2020-05-23 02:16:01' where `id` = '70' [] []
 [2020-05-23 02:16:01] sql.INFO: [0.52] update `notify` set `is_read` = '1', `notify`.`updated_at` = '2020-05-23 02:16:01' where `id` = '69' [] []
 [2020-05-23 02:16:01] sql.INFO: [0.56] update `notify` set `is_read` = '1', `notify`.`updated_at` = '2020-05-23 02:16:01' where `id` = '68' [] []
+[2020-05-26 06:45:59] sql.INFO: [48.39] select count(*) as aggregate from `notify` [] []
+[2020-05-26 06:45:59] sql.INFO: [4.37] select `notify`.`id`, `notify`.`content`, `notify`.`type`, `notify`.`type_id`, `notify`.`target_id`, `notify`.`receiver_id`, `notify`.`receiver_type`, `notify`.`sender_id`, `notify`.`sender_type`, `notify`.`is_read` from `notify` limit 20 offset 0 [] []
+[2020-05-26 06:46:25] sql.INFO: [17.99] select count(*) as aggregate from `notify` [] []
+[2020-05-26 06:46:25] sql.INFO: [1.59] select `notify`.`id`, `notify`.`content`, `notify`.`type`, `notify`.`type_id`, `notify`.`target_id`, `notify`.`receiver_id`, `notify`.`receiver_type`, `notify`.`sender_id`, `notify`.`sender_type`, `notify`.`is_read` from `notify` limit 20 offset 0 [] []

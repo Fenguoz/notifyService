@@ -30,7 +30,7 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
      */
     public function onMessage(WebSocketServer $server, Frame $frame): void
     {
-
+        echo "message FD:{$frame->fd}\n";
         if (empty($frame->data)) {
             $server->push($frame->fd, json_encode([
                 'code' => 10000,
@@ -124,5 +124,7 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
     public function onOpen(WebSocketServer $server, Request $request): void
     {
         $this->redis->set('ws_open_fd_' . $request->fd, 1);//标记新连接
+        echo "open FD:{$request->fd}\n";
+        $server->push($request->fd, 'Opened');
     }
 }
