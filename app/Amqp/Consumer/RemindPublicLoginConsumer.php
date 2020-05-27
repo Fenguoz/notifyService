@@ -60,11 +60,13 @@ class RemindPublicLoginConsumer extends ConsumerMessage
         foreach($notify as $v){
             $user_key = 'ws_' . $param['receiver_type'] . '_' . $param['receiver_id'];
             $fd = $redis->get($user_key);
-            $result = $server->push((int) $fd, json_encode($v));
-            if ($result == 1) { //推送成功
-                $this->notifyService->read($v->id);
-            } else { //推送失败
-                // to do ...延迟推送机制
+            if($fd){
+                $result = $server->push((int) $fd, json_encode($v));
+                if ($result == 1) { //推送成功
+                    $this->notifyService->read($v->id);
+                } else { //推送失败
+                    // to do ...延迟推送机制
+                }
             }
         }
 

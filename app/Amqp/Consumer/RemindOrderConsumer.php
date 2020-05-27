@@ -77,13 +77,19 @@ class RemindOrderConsumer extends ConsumerMessage
             ];
 
             $user_key = 'ws_' . $param['receiver_type'] . '_' . $param['receiver_id'];
+
             $fd = $redis->get($user_key);
-            $result = $server->push((int) $fd, $mq_data);
-            if ($result == 1) { //推送成功
-                //to do ...
-            } else { //推送失败
+            if($fd){
+                $result = $server->push((int) $fd, json_encode($mq_data));
+                if ($result == 1) { //推送成功
+                    //to do ...
+                } else { //推送失败
+                    $result = $this->notifyService->add($mq_data);
+                }
+            }else{
                 $result = $this->notifyService->add($mq_data);
             }
+            
         }
 
         return Result::ACK;

@@ -47,8 +47,15 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
             return;
         }
 
-        list($role, $token) = explode(' ', $data['Authorization']);
-        $role = strtolower($role);
+        if (!isset($data['Role'])) {
+            $server->push($frame->fd, json_encode([
+                'code' => 10004,
+                'message' => 'Role 不能为空',
+            ]));
+            return;
+        }
+
+        $role = strtolower($data['Role']);
         if (!in_array($role, ['user', 'admin'])) {
             $server->push($frame->fd, json_encode([
                 'code' => 10002,
@@ -57,14 +64,14 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
             return;
         }
 
-        $mark = substr($token, -8);
+        $mark = substr($data['Authorization'], -8);
         $frame_key = "ws_{$frame->fd}_{$mark}";
         $user_id = $this->redis->get($frame_key);
         if (!$user_id) {
             try {
                 $response = $this->client->request('GET', config('user_url') . '/userinfo', [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token
+                        'Authorization' => $data['Authorization']
                     ]
                 ]);
                 $result = json_decode((string) $response->getBody(), true);
@@ -96,7 +103,7 @@ class WebSocketController extends BaseController implements OnMessageInterface, 
         $open_fd = $this->redis->get('ws_open_fd_' . $frame->fd);
         if($open_fd == 1){//推送上线
             $this->redis->set('ws_open_fd_' . $frame->fd, 0);
-            $this->notifyService->send($user_id, $role, $user_id, $role, 0, 8);
+            $this->notifyService->send((int)$user_id, $role, (int)$user_id, $role, 0, 8);
         }
     }
 

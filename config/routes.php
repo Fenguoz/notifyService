@@ -20,7 +20,7 @@ Router::addGroup(
         //消息
         Router::post('/post.usersend', [\App\Controller\NotifyController::class, 'userSend']);
     },
-    ['middleware' => [VerifyAdminTokenMiddleware::class]]
+    ['middleware' => [VerifyUserTokenMiddleware::class]]
 );
 
 //管理员权限
@@ -28,7 +28,7 @@ Router::addGroup(
     '', function () {
         Router::post('/post.adminsend', [\App\Controller\NotifyController::class, 'adminSend']);
     },
-    ['middleware' => [VerifyUserTokenMiddleware::class]]
+    ['middleware' => [VerifyAdminTokenMiddleware::class]]
 );
 
 Router::addServer('ws',function(){

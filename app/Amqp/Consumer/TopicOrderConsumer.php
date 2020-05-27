@@ -71,10 +71,14 @@ class TopicOrderConsumer extends ConsumerMessage
 
             $user_key = 'ws_' . $subscribe->user_type . '_' . $subscribe->user_id;
             $fd = $redis->get($user_key);
-            $result = $server->push((int) $fd, json_encode($mq_data));//return type bool
-            if ($result == 1) { //推送成功
-                //to do...
-            } else { //推送失败
+            if($fd){
+                $result = $server->push((int) $fd, json_encode($mq_data));//return type bool
+                if ($result == 1) { //推送成功
+                    //to do...
+                } else { //推送失败
+                    $result = $this->notifyService->add($mq_data);
+                }
+            }else{
                 $result = $this->notifyService->add($mq_data);
             }
         }
