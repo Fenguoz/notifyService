@@ -68,4 +68,15 @@
  *          type="string",
  *      )
  * )
+ * 
+ * @OA\Parameter(
+ *      parameter="client_id",
+ *      name="client_id",
+ *      description="App客户端ID",
+ *      in="query",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="string",
+ *      )
+ * )
  */

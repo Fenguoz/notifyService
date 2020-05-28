@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Model\Setting;
+use App\Service\AppClientService;
 use App\Service\NotifyService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\PatchMapping;
 use Hyperf\Utils\Context;
 
 /**
@@ -22,6 +23,12 @@ class NotifyController extends BaseController
      * @var NotifyService
      */
     protected $notifyService;
+
+    /**
+     * @Inject
+     * @var AppClientService
+     */
+    protected $appClientService;
 
     /**
      * @OA\Get(
@@ -123,5 +130,33 @@ class NotifyController extends BaseController
 
         $result = $this->notifyService->send($user_id, 'admin', $receiver_id, 'user', $target_id, $type_id, (!empty($template_param) ? json_decode($template_param, true) : []));
         return $this->success($result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/patch.clientid",
+     *     operationId="updateClientId",
+     *     tags={"消息"},
+     *     summary="更新App客户端ID",
+     *     description="更新App客户端ID",
+     *     @OA\Parameter(ref="#/components/parameters/client_id"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(ref="#/components/schemas/success")
+     *     ),
+     *     security={
+     *          {"Authorization":{}}
+     *     }
+     * )
+     */
+    /**
+     * @PatchMapping(path="updateClientId")
+     */
+    public function updateClientId()
+    {
+        $user_id = Context::get('user_id');
+        $client_id = (string) $this->request->input('client_id');
+        $this->appClientService->updateClientId($user_id, 'user', $client_id);
     }
 }

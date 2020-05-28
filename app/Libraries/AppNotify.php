@@ -1,32 +1,20 @@
 <?php
 
-namespace App\Task;
+namespace App\Libraries;
 
 use App\Model\Setting;
-use Hyperf\Contract\StdoutLoggerInterface;
-use Hyperf\Crontab\Annotation\Crontab;
 use Hyperf\Di\Annotation\Inject;
 
-/**
- * @Crontab(name="AppNotify", rule="* * * * *", callback="execute", memo="App消息推送")
- */
 class AppNotify
 {
-
-    /**
-     * @Inject()
-     * @var \Hyperf\Contract\StdoutLoggerInterface
-     */
-    private $logger;
-
     /**
      * @Inject
      * @var Setting
      */
     protected $setting;
 
-    protected $appKey = ''; //应用appkey
     protected $appId = ''; //应用appid
+    protected $appKey = ''; //应用appkey
     protected $appSecret = '';
     protected $masterSecret = '';
     protected $isOffline = true; //是否离线
@@ -36,63 +24,38 @@ class AppNotify
     protected $isClearable = true; //通知栏是否可清除
     protected $offlineExpireTime = 43200000; //离线时间(s)
 
-    public function execute()
+    public function __construct()
     {
         $setting = $this->setting->getListByModule('app');
-        $this->appKey = $setting['app_key'];
         $this->appId = $setting['app_id'];
+        $this->appKey = $setting['app_key'];
         $this->appSecret = $setting['app_secret'];
         $this->masterSecret = $setting['app_master_secret'];
         $this->logo = $setting['app_logo'];
-
-        // $this->Push('c28c1a9a771bb323f6d30426122e6ab0', 'test', 'test-content');
-
-        $this->logger->info(date('Y-m-d H:i:s', time()));
-
-        // $redis = $this->container->get(RedisFactory::class)->get('default');
-        // $server = $this->container->get(ServerFactory::class)->getServer()->getServer();
-
-        // $param = json_decode($data, true);
-        // $notify = $this->notifyService->getList([
-        //     'receiver_id' => $param['receiver_id'],
-        //     'receiver_type' => $param['receiver_type'],
-        //     'is_read' => 0,
-        // ]);
-
-        // foreach($notify as $v){
-        //     $user_key = 'ws_' . $param['receiver_type'] . '_' . $param['receiver_id'];
-        //     $fd = $redis->get($user_key);
-        //     if($fd){
-        //         $result = $server->push((int) $fd, json_encode([
-        //             'code' => 200,
-        //             'message' => 'success',
-        //             'data' => $v
-        //         ]));
-        //         if ($result == 1) { //推送成功
-        //             $this->notifyService->read($v->id);
-        //         } else { //推送失败
-        //             // to do ...延迟推送机制
-        //         }
-        //     }
-        // }
-
-        // $members = DB::table('Members')
-        //     ->where('MessageSendDate', '<>', intval(date('Ymd')))
-        //     ->where(DB::raw('SumReward/SumPay'), '>=', $conf->Ratio)
-        //     ->select('Id','ClientId')
-        //     ->paginate(1000);
-        // foreach($members as $item){
-        //     if(empty($item->ClientId)) continue;
-        //     try{
-        //         $this->Push($item->ClientId, $conf->Title, $conf->Content);
-        //         DB::table('Members')->where('Id', $item->Id)->update(['MessageSendDate' => intval(date('Ymd'))]);
-        //     } catch(\Exception $e){
-        //         continue;
-        //     }
-        // }
+        $this->isOffline = $this->filter($setting['app_is_offline']);
+        $this->isRing = $this->filter($setting['app_is_ring']);
+        $this->isVibrate = $this->filter($setting['app_is_vibrate']);
+        $this->isClearable = $this->filter($setting['app_is_clearable']);
+        $this->offlineExpireTime = $setting['app_offline_expire_time'];
     }
 
-    private function Push($cid, $title, $content)
+    public function filter($value)
+    {
+        switch ($value) {
+            case 'false':
+                $real_value = false;
+                break;
+            case 'true':
+                $real_value = true;
+                break;
+            default:
+                $real_value = trim($value);
+                break;
+        }
+        return $real_value;
+    }
+
+    public function push($cid, $title, $content)
     {
         $igt = new \IGeTui('', $this->appKey, $this->masterSecret);
 

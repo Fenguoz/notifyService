@@ -11,6 +11,41 @@
         }
     ],
     "paths": {
+        "/get.notify.list": {
+            "get": {
+                "tags": [
+                    "消息"
+                ],
+                "summary": "获取消息列表",
+                "description": "获取消息列表",
+                "operationId": "list",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
         "/post.usersend": {
             "post": {
                 "tags": [
@@ -69,6 +104,38 @@
                     },
                     {
                         "$ref": "#/components/parameters/template_param"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ]
+            }
+        },
+        "/patch.clientid": {
+            "patch": {
+                "tags": [
+                    "消息"
+                ],
+                "summary": "更新App客户端ID",
+                "description": "更新App客户端ID",
+                "operationId": "updateClientId",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/client_id"
                     }
                 ],
                 "responses": {
@@ -484,6 +551,15 @@
                 "in": "query",
                 "description": "扩展参数(json字符串)",
                 "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "client_id": {
+                "name": "client_id",
+                "in": "query",
+                "description": "App客户端ID",
+                "required": true,
                 "schema": {
                     "type": "string"
                 }
