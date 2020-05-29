@@ -19,6 +19,7 @@ Router::addGroup(
 
         //消息
         Router::post('/post.usersend', [\App\Controller\NotifyController::class, 'userSend']);
+        Router::patch('/patch.clientid', [\App\Controller\NotifyController::class, 'updateClientId']);
     },
     ['middleware' => [VerifyUserTokenMiddleware::class]]
 );

@@ -157,6 +157,7 @@ class NotifyController extends BaseController
     {
         $user_id = Context::get('user_id');
         $client_id = (string) $this->request->input('client_id');
-        $this->appClientService->updateClientId($user_id, 'user', $client_id);
+        $result = $this->appClientService->updateClientId($user_id, 'user', $client_id);
+        return $this->success($result);
     }
 }
