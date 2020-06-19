@@ -1,36 +1,73 @@
-# Introduction
+# 项目Api基础框架
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+#### 环境配置：
 
-# Requirements
+- PHP >= 7.2
+- Swoole PHP 扩展 >= 4.4，并关闭了 `Short Name`
+- OpenSSL PHP 扩展
+- JSON PHP 扩展
+- PDO PHP 扩展
+- Redis PHP 扩展
+- Protobuf PHP 扩展
+- Mysql5.7
+- Nginx
+- Swagger3.0
+- RabbitMQ
+- Consul
 
-Hyperf has some requirements for the system environment, it can only run under Linux and Mac environment, but due to the development of Docker virtualization technology, Docker for Windows can also be used as the running environment under Windows.
+# Swagger
 
-The various versions of Dockerfile have been prepared for you in the [hyperf\hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf\hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
+- 访问地址：Nginx自行配置（地址：public/swagger/index.html）
+- 更新命令：php bin/hyperf.php swagger:gen -o ./public/swagger/ -f json
 
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
+#### Swagger编写规范
 
- - PHP >= 7.2
- - Swoole PHP extension >= 4.4，and Disabled `Short Name`
- - OpenSSL PHP extension
- - JSON PHP extension
- - PDO PHP extension （If you need to use MySQL Client）
- - Redis PHP extension （If you need to use Redis Client）
- - Protobuf PHP extension （If you need to use gRPC Server of Client）
+- 初始项目：先BaseController中修改基本配置（项目名称及域名）
+- 请求方式（Post|Get|Put|Delete）
+- 是否需要会员认证（security={{"Authorization":{}}}）
+- 接口描述
+- 传参
+    - 是否必填
+    - 注明备注
+    - 参数配置项（路径：/app/Swagger/Parameters 根据模块进行划分文件）
+- 返参
+    - 注明备注
+    - 参数配置项（路径：/app/Swagger/Response 根据模块进行划分文件）
 
-# Installation using Composer
+# PHP规范
 
-The easiest way to create a new Hyperf project is to use Composer. If you don't have it already installed, then please install as per the documentation.
+#### Controller
 
-To create your new Hyperf project:
+- 命名规范
+    - 根据模块划分Controller
+    - 命名 = 模块 + Controller.php 大驼峰命名规则
+- 禁止在Controller中直接调取Model，须通过Service调取Model
+- 接口返参统一使用success方法（status=200成功，否则失败）
+- Controller使命
+    - 简单的参数校验
+    - 一个或多个Service中方法调用
+    - 返回接口结果
+    
+#### Service
 
-$ composer create-project hyperf/hyperf-skeleton path/to/install
+- 命名规范
+    - 根据模块划分Service
+    - 命名 = 模块 + Service.php 大驼峰命名规则
+- 一个方法不得超过100行代码，除特殊情况外需拆解成几个方法
+- 错误码
+    - 统一调用ErrorCode
+    - 定义错误码根据模块从1-9划分
+    - 错误码依次自增添加
+    - 错误码配置（路径：/app/Exceptions/ErrorCode.php）
+- Service使命
+    - 参数校验及过滤
+    - 高可用、低藕性
+    - 处理业务逻辑
+    
+#### Model
 
-Once installed, you can run the server immediately using the command below.
-
-$ cd path/to/install
-$ php bin/hyperf.php start
-
-This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/`
-
-which will bring up Hyperf default home page.
+- 命名规范
+    - 命名 = 模块 + Model.php 大驼峰命名规则
+- Model使命
+    - 对应数据库表
+    - 封装高可用数据

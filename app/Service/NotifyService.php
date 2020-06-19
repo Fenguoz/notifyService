@@ -1,141 +1,82 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
 use App\Amqp\Producer\RemindProducer;
 use App\Amqp\Producer\TopicProducer;
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Model\Action;
 use App\Model\Notify;
-use Hyperf\Amqp\Producer;
+use App\Model\NotifyTemplate;
+use App\Model\Queue;
+use App\Rpc\Types\NotifyCodeType;
+use App\Rpc\NotifyServiceInterface;
+use Hyperf\RpcServer\Annotation\RpcService;
 use Hyperf\Di\Annotation\Inject;
 
-class NotifyService extends BaseService
+/**
+ * @RpcService(name="NotifyService", protocol="jsonrpc-http", server="jsonrpc-http", publishTo="consul")
+ */
+class NotifyService extends BaseService implements NotifyServiceInterface
 {
-    /**
-     * @Inject
-     * @var Notify
-     */
-    protected $notify;
-
-    /**
-     * @Inject
-     * @var Producer
-     */
-    protected $producer;
-
-    /**
-     * @Inject
-     * @var SubscriptionTypeService
-     */
-    protected $subscriptionTypeService;
-
-    /**
-     * @Inject
-     * @var SubscriptionService
-     */
-    protected $subscriptionService;
-
-    /**
-     * getList
-     * 条件获取广告位列表
-     * @param array $where 查询条件
-     * @param array $order 排序条件
-     * @param int $page 页数
-     * @param int $limit 条数
-     * @return mixed
-     */
-    public function getList($where = [], $order = ['id' => 'DESC'], $page = 1, $limit = 10)
+    public function send(int $code, int $action, array $params)
     {
-        return $this->notify->getList($where, $order, $page, $limit);
-    }
-
-    /**
-     * add
-     * 添加
-     * @param array $data 数据
-     * @return bool
-     */
-    public function add(array $data): bool
-    {
-        if (!$data) throw new BusinessException(ErrorCode::PARAMS_ERROR);
-
-        $result = $this->notify->create($data);
-        if (!$result) throw new BusinessException(ErrorCode::ADD_ERROR);
-        return true;
-    }
-
-    /**
-     * delete
-     * 删除
-     * @param int $id 主键ID
-     * @return bool
-     */
-    public function delete(int $id): bool
-    {
-        if ($id <= 0) throw new BusinessException(ErrorCode::PARAMS_ERROR);
-
-        $info = $this->notify->find($id);
-        if (!$info) throw new BusinessException(ErrorCode::DATA_NOT_EXIST);
-
-        if (!$this->notify->delete()) throw new BusinessException(ErrorCode::DELETE_ERROR);
-        return true;
-    }
-
-    /**
-     * send
-     * 发送
-     * @param int $sender_id 发送者id
-     * @param string $sender_type 发送者类型
-     * @param int $receiver_id 接收者id
-     * @param string $receiver_type 接收者类型
-     * @param int $target_id 目标id
-     * @param int $type_id 类型(类似模版id)
-     * @param array $ext_param 扩展参数(类似模板参数)
-     * @return mixed
-     */
-    public function send(int $sender_id, string $sender_type, int $receiver_id, string $receiver_type, int $target_id = 0, int $type_id, array $ext_param = [])
-    {
-        $type = $this->subscriptionTypeService->getInfoById($type_id);
-        if (!$type) throw new BusinessException(ErrorCode::DATA_NOT_EXIST);
-
-        //是否订阅
-        if ($sender_type == 'user' && $target_id > 0) { //用户需要订阅事件
-            //指定某些类型判断是否订阅（待定）
-            $is_subscribe = $this->subscriptionService->isSubscribe($sender_id, $sender_type, $target_id, $type->parent_id);
-            if (!$is_subscribe) {
-                $this->subscriptionService->subscribing($sender_id, $sender_type, $target_id, $type->parent_id, 'event');
-            }
+        if (!Action::find($action)) return $this->error(ErrorCode::ACTION_EMPTY);
+        try {
+            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action))->templateValue()->send();
+        } catch (BusinessException $e) {
+            return $this->error($e->getCode());
         }
-        if ($sender_type == 'admin') { //管理员需要订阅话题 订阅话题由后台设置
+        return $this->success();
+    }
 
+    public function sendBatch(int $code, int $action, array $params)
+    {
+        if (!Action::find($action)) return $this->error(ErrorCode::ACTION_EMPTY);
+        try {
+            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action))->batchTemplateValue()->sendBatch();
+        } catch (BusinessException $e) {
+            return $this->error($e->getCode());
         }
+        return $this->success();
+    }
 
-        $data = [
-            'type_id' => $type_id,
-            'target_id' => $target_id,
-            'sender_id' => $sender_id,
-            'sender_type' => $sender_type,
-            'receiver_id' => $receiver_id,
-            'receiver_type' => $receiver_type,
-            'ext_param' => $ext_param,
-        ];
+    private function getTemplate(int $code, int $action)
+    {
+        $notify_template = NotifyTemplate::query()->where('notify_code', NotifyCodeType::$__names[$code])->where('action_id', $action)->first();
+        if (!$notify_template) throw new BusinessException(ErrorCode::DATA_NOT_EXIST);
+        return $notify_template->template;
+    }
+
+    public function queue(int $action, array $params, int $sort = 100)
+    {
+        $action = Action::find($action);
+        if (!$action) return $this->error(ErrorCode::ACTION_EMPTY);
 
         //加入消息队列
-        $this->producer->produce(new TopicProducer(json_encode($data), 'topic.' . $type->routing_key, 'topic.' . $type->module));
-        $this->producer->produce(new RemindProducer(json_encode($data), 'remind.' . $type->routing_key, 'remind.' . $type->module));
+        $this->producer->produce(new TopicProducer(json_encode($params), 'topic.' . $action->routing_key, 'topic.' . $action->module));
+        $this->producer->produce(new RemindProducer(json_encode($params), 'remind.' . $action->routing_key, 'remind.' . $action->module));
+        return $this->success();
     }
 
-    public function read(int $id): bool
+    public function getActionByModule(string $module)
     {
-        if ($id <= 0) throw new BusinessException(ErrorCode::PARAMS_ERROR);
+        $data = Action::select('id', 'name', 'action', 'parent_id')->where('module', $module)->get();
+        return $this->success($data);
+    }
 
-        return $this->notify
-            ->where('id', $id)
-            ->update([
-                'is_read' => 1
-            ]) ? true : false;
+    public function getActionIdByModuleAction(string $module, string $action)
+    {
+        $id = Action::where(['module' => $module, 'action' => $action])->value('id');
+        if (!$id)  return $this->error(ErrorCode::DATA_NOT_EXIST);
+        return $this->success($id);
+    }
+
+    public function getActionInfoByActionId(int $action_id)
+    {
+        $info = Action::select('id', 'name', 'action', 'parent_id')->find($action_id);
+        if (!$info)  return $this->error(ErrorCode::DATA_NOT_EXIST);
+        return $this->success($info);
     }
 }

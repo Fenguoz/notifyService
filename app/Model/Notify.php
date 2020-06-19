@@ -4,47 +4,48 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class Notify extends BaseModel
+use Hyperf\DbConnection\Model\Model;
+
+/**
+ * @property string $code 
+ * @property string $name 
+ * @property string $desc 
+ * @property string $config 
+ * @property int $status 
+ * @property int $sort 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ */
+class Notify extends Model
 {
-    protected $table = 'notify';
-
-    protected $fillable = [
-        'content',
-        'type',
-        'type_id',
-        'target_id',
-        'sender_id',
-        'sender_type',
-        'is_read',
-        'receiver_id',
-        'receiver_type',
-    ];
-
+    protected $primaryKey = 'code';
     /**
-     * getList
-     * 获取列表
-     * @param array $where 查询条件
-     * @param array $order 排序条件
-     * @param int $page 页数
-     * @param int $limit 条数
-     * @return array
+     * The table associated with the model.
+     *
+     * @var string
      */
-    public function getList($where = [], $order = [], $page = 1, $limit = 10)
+    protected $table = 'notify';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = ['status' => 'integer', 'sort' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
+    public static function getConfigByCode(string $code): array
     {
-        $query = $this->query()->select($this->table . '.id', $this->table . '.content', $this->table . '.type', $this->table . '.type_id', $this->table . '.target_id', $this->table . '.receiver_id', $this->table . '.receiver_type', $this->table . '.sender_id', $this->table . '.sender_type', $this->table . '.is_read');
-        // 循环增加查询条件
-        foreach ($where as $k => $v) {
-            if ($v || $v != null) {
-                $query = $query->where($this->table . '.' . $k, $v);
-            }
-        }
-        // 追加排序
-        if ($order && is_array($order)) {
-            foreach ($order as $k => $v) {
-                $query = $query->orderBy($this->table . '.' . $k, $v);
-            }
-        }
-        
-        return $query->paginate($limit, ['*'], 'page', $page);
+        $config = self::query()->where('code', $code)->value('config');
+        return $config ? json_decode($config, true) : [];
+    }
+    
+    public static function getStatusByCode(string $code): int
+    {
+        return self::query()->where('code', $code)->value('status') ?? 0;
     }
 }

@@ -27,13 +27,4 @@ return [
             LogLevel::WARNING,
         ],
     ],
-    'oauth_url' => env('OAUTH_URL', 'http://micro.zgf.8kpay.com:10000'),
-    'user_url' => env('USER_URL', 'http://micro.zgf.8kpay.com:10001'),
-    'goods_url' => env('GOODS_URL', 'http://micro.zgf.8kpay.com:10002'),
-    'wallet_url' => env('WALLET_URL', 'http://micro.zgf.8kpay.com:10003'),
-    'order_url' => env('ORDER_URL', 'http://micro.zgf.8kpay.com:10004'),
-    'oauth_grant_type' => env('OAUTH_GRANT_TYPE', 'password'),
-    'oauth_client_id' => env('OAUTH_CLIENT_ID', 1),
-    'oauth_client_secret' => env('OAUTH_CLIENT_SECRET', 'Se3mV****6uiPb'),
-    'client_token' => env('CLIENT_TOKEN', 'eyJ0eXAiOiJKV1Q****a1zhmZlcDSXujq6wCvHEf7ChMHZwGpY'),
 ];

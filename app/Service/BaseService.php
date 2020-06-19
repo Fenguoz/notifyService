@@ -1,17 +1,46 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Service;
 
-use Psr\Container\ContainerInterface;
-use Hyperf\Di\Annotation\Inject;
-use App\Constants\StatusCode;
+use App\Constants\ErrorCode;
+use Driver\Notify\NotifyFactory;
+use Hyperf\Amqp\Producer;
+use Hyperf\Utils\ApplicationContext;
 
-/**
- * BaseService
- * 服务基类
- */
-class BaseService
+abstract class BaseService
 {
+    /**
+     * @var ContainerInterfase
+     */
+    protected $container;
+
+    public function __construct()
+    {
+        $this->container = ApplicationContext::getContainer();
+        $this->producer = $this->container->get(Producer::class);
+        $this->notify = $this->container->get(NotifyFactory::class);
+    }
+
+    /**
+     * success
+     */
+    public function success($data = [], string $msg = null)
+    {
+        return [
+            'code' => ErrorCode::SUCCESS,
+            'message' => $msg ?? ErrorCode::getMessage(ErrorCode::SUCCESS),
+            'data' => $data
+        ];
+    }
+
+    /**
+     * error
+     */
+    public function error(int $code = ErrorCode::ERR_SERVER, string $msg = null)
+    {
+        return [
+            'code' => $code,
+            'message' => $msg ?? ErrorCode::getMessage($code),
+        ];
+    }
 }

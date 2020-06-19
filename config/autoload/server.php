@@ -16,28 +16,41 @@ use Hyperf\Server\SwooleEvent;
 return [
     'mode' => SWOOLE_PROCESS,
     'servers' => [
+        // [
+        //     'name' => 'http',
+        //     'type' => Server::SERVER_HTTP,
+        //     'host' => '0.0.0.0',
+        //     'port' => 9501,
+        //     'sock_type' => SWOOLE_SOCK_TCP,
+        //     'callbacks' => [
+        //         SwooleEvent::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+        //     ],
+        // ],
         [
-            'name' => 'http',
+            'name' => 'jsonrpc-http',
             'type' => Server::SERVER_HTTP,
             'host' => '0.0.0.0',
-            'port' => 9401,
+            'port' => 9502,
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
-                SwooleEvent::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+                SwooleEvent::ON_REQUEST => [\Hyperf\JsonRpc\HttpServer::class, 'onRequest'],
             ],
         ],
-        [
-            'name' => 'ws',
-            'type' => Server::SERVER_WEBSOCKET,
-            'host' => '0.0.0.0',
-            'port' => 9601,
-            'sock_type' => SWOOLE_SOCK_TCP,
-            'callbacks' => [
-                SwooleEvent::ON_HAND_SHAKE => [Hyperf\WebSocketServer\Server::class, 'onHandShake'],
-                SwooleEvent::ON_MESSAGE => [Hyperf\WebSocketServer\Server::class, 'onMessage'],
-                SwooleEvent::ON_CLOSE => [Hyperf\WebSocketServer\Server::class, 'onClose'],
-            ],
-        ],
+        // [
+        //     'name' => 'jsonrpc',
+        //     'type' => Server::SERVER_BASE,
+        //     'host' => '0.0.0.0',
+        //     'port' => 9503,
+        //     'sock_type' => SWOOLE_SOCK_TCP,
+        //     'callbacks' => [
+        //         SwooleEvent::ON_RECEIVE => [\Hyperf\JsonRpc\TcpServer::class, 'onReceive'],
+        //     ],
+        //     'settings' => [
+        //         'open_eof_split' => true,
+        //         'package_eof' => "\r\n",
+        //         'package_max_length' => 1024 * 1024 * 2,
+        //     ],
+        // ],
     ],
     'settings' => [
         'enable_coroutine' => true,

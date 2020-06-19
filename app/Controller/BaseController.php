@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
+use App\Constants\ErrorCode;
 use Hyperf\Guzzle\ClientFactory;
 use Hyperf\Redis\RedisFactory;
-use Hyperf\Utils\Context;
 use Psr\Container\ContainerInterface;
-use App\Constants\ErrorCode;
 
 /**
  * @OA\Info(
  *     version="1.0",
- *     title="消息服务APi",
+ *     title="XX项目Api",
  * ),
  * @OA\Server(
  *     url="http://127.0.0.1:9501",
- *     description="本地"
+ *     description="本地环境"
  * )
  */
 /**
@@ -74,5 +73,44 @@ class BaseController extends AbstractController
         ];
 
         return $this->response->json($data);
+    }
+
+    public function index()
+    {
+        $service = new \App\Service\NotifyService();
+
+        // $code = rand(100000,999999);
+        // var_dump($code);
+        // return $service->send(1, 2, [
+        //     'user_id' => 1,
+        //     'user_type' => 'user',
+        //     'phone_number' => '18883333901',
+        //     'code' => $code,
+        // ]);
+
+        // return $service->sendBatch(2, 1, [
+        //     '243944672@qq.com' => [
+        //         'code' => '321321'
+        //     ],
+        //     'zgf243944672@gmail.com' => [
+        //         'code' => '123456'
+        //     ]
+        // ]);
+
+        return $service->send(3, 2, [
+                'client_id' => 'af65dd9f41e93461b4d035a385eed4ff'
+        ]);
+
+        // return 1;
+        // $data = [
+        //     'type_id' => 8,
+        //     'target_id' => 123,
+        //     'sender_id' => 779,
+        //     'sender_type' => 'user',
+        //     'receiver_id' => 784,
+        //     'receiver_type' => 'admin',
+        //     'ext_param' => [],
+        // ];
+        // return $service->queue(8,$data);
     }
 }

@@ -94,38 +94,6 @@
  *      )
  * )
  *
- * @OA\Parameter(
- *      parameter="version",
- *      name="version",
- *      description="版本(默认1.0.0)",
- *      in="query",
- *      required=false,
- *      @OA\Schema(
- *          type="string",
- *      )
- * )
- * 
- * @OA\Parameter(
- *      parameter="device",
- *      name="device",
- *      description="设备(默认:android,ios)",
- *      in="query",
- *      required=false,
- *      @OA\Schema(
- *          type="string",
- *      )
- * )
- * 
- * @OA\Parameter(
- *      parameter="version_type",
- *      name="version_type",
- *      description="设备类型(base,alpha,beta,默认:RC,release)",
- *      in="query",
- *      required=false,
- *      @OA\Schema(
- *          type="string",
- *      )
- * )
  * 
  * @OA\Parameter(
  *      parameter="amount",
@@ -173,16 +141,6 @@
  *      )
  * )
  * 
- * @OA\Parameter(
- *      parameter="type_id",
- *      name="type_id",
- *      description="账单类型ID",
- *      in="query",
- *      required=false,
- *      @OA\Schema(
- *          type="integer",
- *      )
- * )
  * 
  * @OA\Parameter(
  *      parameter="number_min",
@@ -206,5 +164,25 @@
  *      )
  * )
  * 
+ * @OA\Parameter(
+ *      parameter="phone_number",
+ *      name="phone_number",
+ *      description="手机号",
+ *      in="query",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="integer",
+ *      )
+ * )
+ * @OA\Parameter(
+ *      parameter="email",
+ *      name="email",
+ *      description="邮箱",
+ *      in="query",
+ *      required=true,
+ *      @OA\Schema(
+ *          type="string",
+ *      )
+ * )
  * 
  */

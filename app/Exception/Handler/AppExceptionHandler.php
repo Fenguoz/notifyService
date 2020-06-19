@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
-use Hyperf\Di\Annotation\Inject;
 use App\Exception\BusinessException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Psr\Http\Message\ResponseInterface;
-use Hyperf\HttpServer\Contract\ResponseInterface as Response;
 use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
@@ -19,12 +17,6 @@ class AppExceptionHandler extends ExceptionHandler
      * @var StdoutLoggerInterface
      */
     protected $logger;
-
-    /**
-     * @Inject
-     * @var Response
-     */
-    protected $response;
 
     public function __construct(StdoutLoggerInterface $logger)
     {
@@ -35,16 +27,16 @@ class AppExceptionHandler extends ExceptionHandler
     {
         $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
         $this->logger->error($throwable->getTraceAsString());
-        
+
         // 判断是否由业务异常类抛出的异常
         if ($throwable instanceof BusinessException) {
             // 阻止异常冒泡
             $this->stopPropagation();
             // 业务逻辑错误日志处理
-            return $this->response->json([
+            return [
                 'code' => $throwable->getCode(),
                 'message'=> $throwable->getMessage(),
-            ]);
+            ];
         }
 
         return $response->withHeader("Server", "Hyperf")->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));

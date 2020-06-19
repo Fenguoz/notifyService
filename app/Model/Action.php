@@ -6,17 +6,20 @@ namespace App\Model;
 use Hyperf\DbConnection\Model\Model;
 /**
  * @property int $id 
- * @property int $code 
- * @property string $content 
+ * @property string $name 
+ * @property int $parent_id 
+ * @property string $module 
+ * @property string $action 
+ * @property string $routing_key 
  */
-class Template extends Model
+class Action extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'template';
+    protected $table = 'action';
     /**
      * The attributes that are mass assignable.
      *
@@ -28,5 +31,5 @@ class Template extends Model
      *
      * @var array
      */
-    protected $casts = ['id' => 'integer', 'code' => 'string'];
+    protected $casts = ['id' => 'integer', 'parent_id' => 'integer'];
 }

@@ -25,11 +25,17 @@
         "hyperf/memory": "~1.1.0",
         "hyperf/process": "~1.1.0",
         "hyperf/redis": "~1.1.0",
-        "hyperf/amqp": "~1.1.0",
-        "hyperf/websocket-server": "^1.1",
-        "hyperf/constants": "^1.1",
+        "hyperf/json-rpc": "~1.1.0",
+        "hyperf/rpc": "~1.1.0",
+        "hyperf/rpc-client": "~1.1.0",
+        "hyperf/rpc-server": "~1.1.0",
+        "hyperf/service-governance": "~1.1.0",
+        "hyperf/constants": "~1.1.0",
+        "hyperf/amqp": "^1.1",
         "hyperf/swagger": "^1.1",
-        "hyperf/crontab": "^1.1",
+        "hyperf/validation": "^1.1",
+        "hyperf/translation": "^1.1",
+        "hyperf/consul": "^1.1",
         "getuilaboratory/getui-pushapi-php-client": "dev-master"
     },
     "require-dev": {
@@ -51,7 +57,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Driver\\": "app/Library/Driver/"
         },
         "files": []
     },
