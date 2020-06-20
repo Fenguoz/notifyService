@@ -79,14 +79,14 @@ class BaseController extends AbstractController
     {
         $service = new \App\Service\NotifyService();
 
-        // $code = rand(100000,999999);
-        // var_dump($code);
-        // return $service->send(1, 2, [
-        //     'user_id' => 1,
-        //     'user_type' => 'user',
-        //     'phone_number' => '18883333901',
-        //     'code' => $code,
-        // ]);
+        $code = rand(100000,999999);
+        var_dump($code);
+        return $service->send(1, 2, [
+            'user_id' => 1,
+            'user_type' => 'user',
+            'phone_number' => '18883333901',
+            'code' => $code,
+        ]);
 
         // return $service->sendBatch(2, 1, [
         //     '243944672@qq.com' => [
@@ -97,9 +97,9 @@ class BaseController extends AbstractController
         //     ]
         // ]);
 
-        return $service->send(3, 2, [
-                'client_id' => 'af65dd9f41e93461b4d035a385eed4ff'
-        ]);
+        // return $service->send(3, 2, [
+        //         'client_id' => 'af65dd9f41e93461b4d035a385eed4ff'
+        // ]);
 
         // return 1;
         // $data = [
