@@ -14,3 +14,4 @@ use Hyperf\HttpServer\Router\Router;
 
 // Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\BaseController@index');
+Router::post('/post.queue', 'App\Controller\BaseController@queue');

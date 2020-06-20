@@ -79,7 +79,7 @@ class BaseController extends AbstractController
     {
         $service = new \App\Service\NotifyService();
 
-        $code = rand(100000,999999);
+        $code = rand(100000, 999999);
         var_dump($code);
         return $service->send(1, 2, [
             'user_id' => 1,
@@ -101,7 +101,12 @@ class BaseController extends AbstractController
         //         'client_id' => 'af65dd9f41e93461b4d035a385eed4ff'
         // ]);
 
-        // return 1;
+    }
+
+    public function queue()
+    {
+        $action = $this->request->input('action');
+        $data = $this->request->input('data');
         // $data = [
         //     'type_id' => 8,
         //     'target_id' => 123,
@@ -111,6 +116,7 @@ class BaseController extends AbstractController
         //     'receiver_type' => 'admin',
         //     'ext_param' => [],
         // ];
-        // return $service->queue(8,$data);
+        $service = new \App\Service\NotifyService();
+        return $service->queue($action, $data);
     }
 }
