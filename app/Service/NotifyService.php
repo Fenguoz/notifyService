@@ -12,6 +12,7 @@ use App\Model\NotifyTemplate;
 use App\Model\Queue;
 use App\Rpc\Types\NotifyCodeType;
 use App\Rpc\NotifyServiceInterface;
+use App\Rpc\Types\ActionType;
 use Hyperf\RpcServer\Annotation\RpcService;
 use Hyperf\Di\Annotation\Inject;
 
@@ -20,22 +21,28 @@ use Hyperf\Di\Annotation\Inject;
  */
 class NotifyService extends BaseService implements NotifyServiceInterface
 {
-    public function send(int $code, int $action, array $params)
+    public function send(int $code, string $action, array $params)
     {
-        if (!Action::find($action)) return $this->error(ErrorCode::ACTION_EMPTY);
+        if (!isset(ActionType::$__names[$action])) return $this->error(ErrorCode::ACTION_EMPTY);
+        list($module, $action) = explode('.', $action);
+        $action_id = Action::where(['module' => $module, 'action' => $action])->value('id');
+        if (!$action_id) return $this->error(ErrorCode::DATA_NOT_EXIST);
         try {
-            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action))->templateValue()->send();
+            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action_id))->templateValue()->send();
         } catch (BusinessException $e) {
             return $this->error($e->getCode());
         }
         return $this->success();
     }
 
-    public function sendBatch(int $code, int $action, array $params)
+    public function sendBatch(int $code, string $action, array $params)
     {
-        if (!Action::find($action)) return $this->error(ErrorCode::ACTION_EMPTY);
+        if (!isset(ActionType::$__names[$action])) return $this->error(ErrorCode::ACTION_EMPTY);
+        list($module, $action) = explode('.', $action);
+        $action_id = Action::where(['module' => $module, 'action' => $action])->value('id');
+        if (!$action_id) return $this->error(ErrorCode::DATA_NOT_EXIST);
         try {
-            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action))->batchTemplateValue()->sendBatch();
+            $this->notify->set_adapter(NotifyCodeType::$__names[$code], $params)->setConfig(Notify::getConfigByCode(NotifyCodeType::$__names[$code]))->setTemplate($this->getTemplate($code, $action_id))->batchTemplateValue()->sendBatch();
         } catch (BusinessException $e) {
             return $this->error($e->getCode());
         }
@@ -49,14 +56,16 @@ class NotifyService extends BaseService implements NotifyServiceInterface
         return $notify_template->template;
     }
 
-    public function queue(int $action, array $params, int $sort = 100)
+    public function queue(string $action, array $params, int $sort = 100)
     {
-        $action = Action::find($action);
-        if (!$action) return $this->error(ErrorCode::ACTION_EMPTY);
+        if (!isset(ActionType::$__names[$action])) return $this->error(ErrorCode::ACTION_EMPTY);
+        list($module, $action) = explode('.', $action);
+        $info = Action::where(['module' => $module, 'action' => $action])->first();
+        if (!$info) return $this->error(ErrorCode::DATA_NOT_EXIST);
 
         //加入消息队列
-        $this->producer->produce(new TopicProducer(json_encode($params), 'topic.' . $action->routing_key, 'topic.' . $action->module));
-        $this->producer->produce(new RemindProducer(json_encode($params), 'remind.' . $action->routing_key, 'remind.' . $action->module));
+        $this->producer->produce(new TopicProducer(json_encode($params), 'topic.' . $info->routing_key, 'topic.' . $info->module));
+        $this->producer->produce(new RemindProducer(json_encode($params), 'remind.' . $info->routing_key, 'remind.' . $info->module));
         return $this->success();
     }
 

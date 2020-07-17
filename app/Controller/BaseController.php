@@ -117,6 +117,6 @@ class BaseController extends AbstractController
         //     'ext_param' => [],
         // ];
         $service = new \App\Service\NotifyService();
-        return $service->queue($action, $data);
+        // return $service->queue($action, $data);
     }
 }
