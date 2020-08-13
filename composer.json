@@ -36,7 +36,8 @@
         "hyperf/validation": "^1.1",
         "hyperf/translation": "^1.1",
         "hyperf/consul": "^1.1",
-        "getuilaboratory/getui-pushapi-php-client": "dev-master"
+        "getuilaboratory/getui-pushapi-php-client": "dev-master",
+        "yurunsoft/phpmailer-swoole": "^1.0"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",

@@ -8,10 +8,12 @@ final class NotifyCodeType
     const Sms = 1;
     const Email = 2;
     const GeTui = 3;
+    const Mail = 4;
     static public $__names = array(
         0 => null,
         1 => 'Sms',
         2 => 'Email',
         3 => 'GeTui',
+        4 => 'Mail',
     );
 }

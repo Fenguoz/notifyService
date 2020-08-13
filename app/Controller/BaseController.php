@@ -81,11 +81,10 @@ class BaseController extends AbstractController
 
         $code = rand(100000, 999999);
         var_dump($code);
-        return $service->send(1, 2, [
-            'user_id' => 1,
-            'user_type' => 'user',
-            'phone_number' => '18883333901',
-            'code' => $code,
+        return $service->send(4, 'public.register', [
+            'address' => '243944672@qq.com',
+            // 'address' => '1406668187@qq.com',
+            // 'address' => 'daisy_thq@163.com',
         ]);
 
         // return $service->sendBatch(2, 1, [
