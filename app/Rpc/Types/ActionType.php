@@ -11,6 +11,7 @@ final class ActionType
     const SET_PAY_PASSWORD = 'public.set_pay_password';
     const CHANGE_PHONE_NUMBER = 'public.change_phone_number';
     const KJ_BUY = 'machine.buy';
+    const KJ_APPLY = 'machine.apply';
     static public $__names = array(
         'public.register' => 'REGISTER',
         'public.login' => 'LOGIN',
@@ -19,5 +20,6 @@ final class ActionType
         'public.set_pay_password' => 'SET_PAY_PASSWORD',
         'public.change_phone_number' => 'CHANGE_PHONE_NUMBER',
         'machine.buy' => 'KJ_BUY',
+        'machine.apply' => 'KJ_APPLY',
     );
 }
