@@ -23,7 +23,7 @@ class Service extends AbstractService
             $mail->IsSMTP(); // 设定使用SMTP服务
             $mail->SMTPDebug = 0; // 关闭SMTP调试功能
             $mail->SMTPAuth = true; // 启用 SMTP 验证功能
-            $mail->SMTPSecure = 'ssl'; // 使用安全协议
+            $mail->SMTPSecure = $this->config['smtp_secure']; // 使用安全协议
             $mail->Host = $this->config['host']; // SMTP 服务器
             $mail->Port = $this->config['port']; // SMTP服务器的端口号
             $mail->Username = $this->config['username']; // SMTP服务器用户名
