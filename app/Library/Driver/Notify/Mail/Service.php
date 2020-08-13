@@ -30,7 +30,7 @@ class Service extends AbstractService
             $mail->Password = $this->config['password']; // SMTP服务器密码
             $mail->SetFrom($this->config['send_mail'], $this->config['send_nickname']); // 邮箱，昵称
             $mail->Subject = $this->template->title;
-            $mail->MsgHTML($this->template->content);
+            $mail->MsgHTML($this->replaceTemplate());
             $mail->AddAddress($this->param['address']); // 收件人
             if ($this->config['attachment']) {
                 $mail->addAttachment(BASE_PATH . $this->config['attachment']);
@@ -54,5 +54,20 @@ class Service extends AbstractService
 
     public function _return()
     {
+    }
+
+    public function replaceTemplate()
+    {
+        $content = $this->template->content;
+        if ($content && $this->templateValue) {
+            $key = [];
+            $value = [];
+            foreach ($this->templateValue as $k => $v) {
+                $key[] = $k;
+                $value[] = $v;
+            }
+            $content = str_replace($key, $value, $content);
+        }
+        return $content;
     }
 }
