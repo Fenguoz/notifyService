@@ -37,7 +37,9 @@
         "hyperf/translation": "^1.1",
         "hyperf/consul": "^1.1",
         "getuilaboratory/getui-pushapi-php-client": "dev-master",
-        "yurunsoft/phpmailer-swoole": "^1.0"
+        "yurunsoft/phpmailer-swoole": "^1.0",
+        "overtrue/wechat": "^4.2",
+        "overtrue/easy-sms": "^1.1"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",

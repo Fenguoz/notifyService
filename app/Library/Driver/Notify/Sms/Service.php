@@ -3,37 +3,43 @@
 namespace Driver\Notify\Sms;
 
 use Driver\Notify\AbstractService;
-use Driver\Notify\HttpUtils;
+use Overtrue\EasySms\EasySms;
 
 class Service extends AbstractService
 {
     protected $key;
     protected $url;
-    protected $phone_number;
+    protected $phoneNumber;
 
     public function __construct($param)
     {
         $this->param = $param;
+        $this->phoneNumber = $this->param['phone_number'];
+        unset($this->param['phone_number']);
     }
 
     public function send()
     {
-        $params = array(
-            'key'   => $this->config['key'],
-            'mobile'    => $this->param['phone_number'],
-            'tpl_id'    => $this->template->code,
-            'tpl_value' => http_build_query($this->templateValue)
-        );
+        $sendData = [];
+        $sendData['template'] = $this->template->code;
+        if (isset($this->param['content']) && !empty($this->param['content'])) {
+            $sendData['content'] = $this->param['content'];
+            unset($this->param['content']);
+        }
+        $sendData['data'] = $this->param;
 
-        $content = HttpUtils::http($this->config['url'], $params, $this->config['method']);
-        // Error  {"reason":"模板变量不符合规范","result":NULL,"error_code":205404}
-        // Success  {"reason":"操作成功","result":{"sid":"1720612132040477500","fee":1,"count":1},"error_code":0}
+        $easySms = new EasySms($this->config);
+        $content = $easySms->send($this->phoneNumber, $sendData);
+        //Success {"juhe":{"gateway":"juhe","status":"success","result":{"reason":"\u64cd\u4f5c\u6210\u529f","result":{"sid":"1721120152805315800","fee":1,"count":1},"error_code":0}}}
+
         if ($content) {
-            $result = json_decode($content, true);
-            if ($result['error_code'] != 0) $this->error($result['error_code'], $result['reason']);
+            foreach ($content as $gateways => $info) {
+                if ($info['status'] != 'success') $this->error($info['result']['error_code'], $gateways . ":" . $info['result']['reason']);
+            }
         } else {
             $this->error(500, 'NETWORK_ERROR');
         }
+
         return $this->_notify();
     }
 
