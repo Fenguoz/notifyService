@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Hyperf\HttpServer\Annotation\Controller;
 use App\Constants\ErrorCode;
+use App\Rpc\Types\NotifyCodeType;
 use Hyperf\Guzzle\ClientFactory;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
@@ -81,12 +82,21 @@ class BaseController extends AbstractController
 
         $code = rand(100000, 999999);
         var_dump($code);
-        return $service->send(4, 'machine.apply', [
-            'address' => '243944672@qq.com',
-            'code' => '$2y$10$jzlHU47XKVE.vVOi3hZ7NOVzxJRv45kBhM4W1UpjYsAMxB1upMXeW',
-            // 'address' => '1406668187@qq.com',
-            // 'address' => 'daisy_thq@163.com',
+        return $service->send(NotifyCodeType::Wechat, 'machine.apply', [
+            'openid' => 'oAX5juIiq0w6rcgCOCkXjeWQNv1E',
+            'data' => [
+                'keyword1' => '哪个收到',
+                'keyword2' => '推送消息',
+                'keyword3' => '回复下',
+                'keyword4' => '测试咨询时间',
+            ],
+            'miniprogram_path' => '/pages/user/user'
         ]);
+
+        // return $service->send(NotifyCodeType::Sms, 'public.register', [
+        //     'code' => $code,
+        //     'phone_number' => '18883333901'
+        // ]);
 
         // return $service->sendBatch(2, 1, [
         //     '243944672@qq.com' => [
