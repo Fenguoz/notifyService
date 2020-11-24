@@ -60,7 +60,13 @@ class Service extends AbstractService
         $content = $app->template_message->send($sendData);
         // // Success  {"errcode":0,"errmsg":"ok","msgid":1619409037345800198}
         if ($content) {
-            if ($content['errcode'] != 0) $this->error($content['errcode'], $content['errmsg']);
+            if ($content['errcode'] != 0){
+                $this->error($content['errcode'], $content['errmsg']);
+                throw new BusinessException(
+                    $content['errcode'],
+                    $content['errmsg']
+                );
+            }
         } else {
             $this->error(500, 'NETWORK_ERROR');
         }
