@@ -46,10 +46,10 @@ class Service extends AbstractService
         // 如果 url 和 miniprogram 字段都传，会优先跳转小程序。
         if (isset($this->param['url']) && !empty($this->param['url']))
             $sendData['url'] = $this->param['url'];
-        // if (isset($this->param['miniprogram_path']) && !empty($this->param['miniprogram_path'])) {
-        //     $sendData['miniprogram']['appid'] = $this->config['miniProgram']['app_id'];
-        //     $sendData['miniprogram']['pagepath'] = $this->param['miniprogram_path'];
-        // }
+        if (isset($this->param['miniprogram_path']) && !empty($this->param['miniprogram_path'])) {
+            $sendData['miniprogram']['appid'] = $this->config['miniProgram']['app_id'];
+            $sendData['miniprogram']['pagepath'] = $this->param['miniprogram_path'];
+        }
 
         // $sendData['data'] = [
         //     'keyword1' => 'VALUE',
