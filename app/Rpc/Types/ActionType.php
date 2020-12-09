@@ -12,6 +12,7 @@ final class ActionType
     const CHANGE_PHONE_NUMBER = 'public.change_phone_number';
     const PG_SUCCESS = 'order.pg_success';
     const PG_FAIL = 'order.pg_fail';
+    const KJ_BUY = 'machine.buy';
     static public $__names = array(
         'public.register' => 'REGISTER',
         'public.login' => 'LOGIN',
@@ -21,5 +22,6 @@ final class ActionType
         'public.change_phone_number' => 'CHANGE_PHONE_NUMBER',
         'order.pg_success' => 'PG_SUCCESS',
         'order.pg_fail' => 'PG_FAIL',
+        'machine.buy' => 'KJ_BUY',
     );
 }
