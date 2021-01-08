@@ -27,10 +27,10 @@ class Service extends AbstractService
             unset($this->param['content']);
         }
         $sendData['data'] = $this->param;
-
         $easySms = new EasySms($this->config);
+        // // $number = new PhoneNumber(13188888888, 31);
         $content = $easySms->send($this->phoneNumber, $sendData);
-        //Success {"juhe":{"gateway":"juhe","status":"success","result":{"reason":"\u64cd\u4f5c\u6210\u529f","result":{"sid":"1721120152805315800","fee":1,"count":1},"error_code":0}}}
+        // //Success {"juhe":{"gateway":"juhe","status":"success","result":{"reason":"\u64cd\u4f5c\u6210\u529f","result":{"sid":"1721120152805315800","fee":1,"count":1},"error_code":0}}}
 
         if ($content) {
             foreach ($content as $gateways => $info) {
