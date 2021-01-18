@@ -55,11 +55,11 @@ abstract class AbstractService
 		return $this;
 	}
 
-	protected function error(int $code, string $message)
+	protected function error(int $code, string $message = null)
 	{
 		$this->code = $code;
 		$this->message = $message;
-		return $this;
+		throw new NotifyException($code, $message);
 	}
 
 	public function _notify()

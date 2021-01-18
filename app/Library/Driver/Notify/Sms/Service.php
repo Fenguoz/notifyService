@@ -34,10 +34,11 @@ class Service extends AbstractService
 
         if ($content) {
             foreach ($content as $gateways => $info) {
-                if ($info['status'] != 'success') $this->error($info['result']['error_code'], $gateways . ":" . $info['result']['reason']);
+                if ($info['status'] != 'success')
+                    return $this->error($info['result']['error_code'], $gateways . ":" . $info['result']['reason']);
             }
         } else {
-            $this->error(500, 'NETWORK_ERROR');
+            return $this->error(500, 'NETWORK_ERROR');
         }
 
         return $this->_notify();

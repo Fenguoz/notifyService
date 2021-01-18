@@ -3,7 +3,6 @@
 namespace Driver\Notify\Wechat;
 
 use App\Constants\ErrorCode;
-use App\Exception\BusinessException;
 use Driver\Notify\AbstractService;
 use EasyWeChat\Factory;
 use GuzzleHttp\Client;
@@ -24,13 +23,10 @@ class Service extends AbstractService
     public function send()
     {
         if (!isset($this->param['openid']) || empty($this->param['openid']))
-            throw new BusinessException(
-                ErrorCode::DATA_NOT_EXIST
-            );
+            return $this->error(ErrorCode::DATA_NOT_EXIST);
+
         if (!isset($this->param['data']) || empty($this->param['data']))
-            throw new BusinessException(
-                ErrorCode::DATA_NOT_EXIST
-            );
+            return $this->error(ErrorCode::DATA_NOT_EXIST);
 
         $app = Factory::officialAccount($this->config['officialAccount']);
         $handler = new CoroutineHandler();
@@ -60,15 +56,10 @@ class Service extends AbstractService
         $content = $app->template_message->send($sendData);
         // // Success  {"errcode":0,"errmsg":"ok","msgid":1619409037345800198}
         if ($content) {
-            if ($content['errcode'] != 0){
-                $this->error($content['errcode'], $content['errmsg']);
-                throw new BusinessException(
-                    $content['errcode'],
-                    $content['errmsg']
-                );
-            }
+            if ($content['errcode'] != 0)
+                return $this->error($content['errcode'], $content['errmsg']);
         } else {
-            $this->error(500, 'NETWORK_ERROR');
+            return $this->error(500, 'NETWORK_ERROR');
         }
         return $this->_notify();
     }

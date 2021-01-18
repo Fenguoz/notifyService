@@ -11,6 +11,7 @@ use App\Model\Action;
 use App\Model\Notify as ModelNotify;
 use App\Model\NotifyTemplate;
 use App\Rpc\NotifyServiceInterface;
+use Driver\Notify\NotifyException;
 use Hyperf\RpcServer\Annotation\RpcService;
 
 /**
@@ -26,15 +27,19 @@ class NotifyService extends BaseService implements NotifyServiceInterface
             ->value('id');
         if (!$action_id)
             return $this->error(ErrorCode::DATA_NOT_EXIST);
+
+        $notifyCode = Notify::$__names[$code];
         try {
             $this->notify
-                ->set_adapter(Notify::$__names[$code], $params)
-                ->setConfig(ModelNotify::getConfigByCode(Notify::$__names[$code]))
-                ->setTemplate($this->getTemplate($code, $action_id))
+                ->setAdapter($notifyCode, $params)
+                ->setConfig(ModelNotify::getConfigByCode($notifyCode))
+                ->setTemplate(NotifyTemplate::getTemplate($notifyCode, (int)$action_id))
                 ->templateValue()
                 ->send();
         } catch (BusinessException $e) {
             return $this->error($e->getCode());
+        } catch (NotifyException $e) {
+            return $this->error($e->getCode(), $e->getMessage());
         }
         return $this->success();
     }
@@ -47,28 +52,21 @@ class NotifyService extends BaseService implements NotifyServiceInterface
             ->value('id');
         if (!$action_id)
             return $this->error(ErrorCode::DATA_NOT_EXIST);
+
+        $notifyCode = Notify::$__names[$code];
         try {
             $this->notify
-                ->set_adapter(Notify::$__names[$code], $params)
-                ->setConfig(ModelNotify::getConfigByCode(Notify::$__names[$code]))
-                ->setTemplate($this->getTemplate($code, $action_id))
+                ->setAdapter($notifyCode, $params)
+                ->setConfig(ModelNotify::getConfigByCode($notifyCode))
+                ->setTemplate(NotifyTemplate::getTemplate($notifyCode, (int)$action_id))
                 ->batchTemplateValue()
                 ->sendBatch();
         } catch (BusinessException $e) {
             return $this->error($e->getCode());
+        } catch (NotifyException $e) {
+            return $this->error($e->getCode(), $e->getMessage());
         }
         return $this->success();
-    }
-
-    private function getTemplate(int $code, int $action)
-    {
-        $notify_template = NotifyTemplate::query()
-            ->where('notify_code', Notify::$__names[$code])
-            ->where('action_id', $action)
-            ->first();
-        if (!$notify_template)
-            throw new BusinessException(ErrorCode::DATA_NOT_EXIST);
-        return $notify_template->template;
     }
 
     public function queue(string $action, array $params, int $sort = 100)
@@ -96,29 +94,5 @@ class NotifyService extends BaseService implements NotifyServiceInterface
             )
         );
         return $this->success();
-    }
-
-    public function getActionByModule(string $module)
-    {
-        $data = Action::select('id', 'name', 'action', 'parent_id')
-            ->where('module', $module)
-            ->get();
-        return $this->success($data);
-    }
-
-    public function getActionIdByModuleAction(string $module, string $action)
-    {
-        $id = Action::where('module', $module)
-            ->where('action', $action)
-            ->value('id');
-        if (!$id)  return $this->error(ErrorCode::DATA_NOT_EXIST);
-        return $this->success($id);
-    }
-
-    public function getActionInfoByActionId(int $action_id)
-    {
-        $info = Action::select('id', 'name', 'action', 'parent_id')->find($action_id);
-        if (!$info)  return $this->error(ErrorCode::DATA_NOT_EXIST);
-        return $this->success($info);
     }
 }

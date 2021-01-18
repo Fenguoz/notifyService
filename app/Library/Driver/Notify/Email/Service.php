@@ -36,9 +36,10 @@ class Service extends AbstractService
         //Success {"result":true,"statusCode":200,"message":"请求成功","info":{"emailIdList":["1591957142335_129472_18860_3372.sc-10_9_13_213-inbound0$243944672@qq.com"]}}
         if ($content) {
             $result = json_decode($content, true);
-            if (!$result['result']) $this->error($result['statusCode'], $result['message']);
+            if (!$result['result'])
+                return $this->error($result['statusCode'], $result['message']);
         } else {
-            $this->error(500, 'NETWORK_ERROR');
+            return $this->error(500, 'NETWORK_ERROR');
         }
 
         return $this->_notify();

@@ -3,7 +3,6 @@
 namespace Driver\Notify;
 
 use App\Constants\ErrorCode;
-use App\Exception\BusinessException;
 
 class NotifyFactory
 {
@@ -16,17 +15,17 @@ class NotifyFactory
 	 * @param  $adapter_name 模块code
 	 * @param  $adapter_config 模块配置
 	 */
-	public function set_adapter(string $adapter_name, array $adapter_data = [])
+	public function setAdapter(string $adapter_name, array $adapter_data = [])
 	{
 		if (empty($adapter_name))
-			throw new BusinessException(ErrorCode::ADAPTER_EMPTY);
+			throw new NotifyException(ErrorCode::ADAPTER_EMPTY);
 
 		if (\App\Model\Notify::getStatusByCode($adapter_name) == 0)
-			throw new BusinessException(ErrorCode::ADAPTER_TURN_OFF);
+			throw new NotifyException(ErrorCode::ADAPTER_TURN_OFF);
 
 		$class_file = BASE_PATH . '/app/Library/Driver/Notify/' . $adapter_name . '/Service.php';
 		if (!file_exists($class_file))
-			throw new BusinessException(ErrorCode::FILE_NOT_FOUND);
+			throw new NotifyException(ErrorCode::FILE_NOT_FOUND);
 
 		$class = "\Driver\Notify\\$adapter_name\Service";
 		$this->adapter_instance = new $class($adapter_data);
