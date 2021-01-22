@@ -3656,16 +3656,16 @@
         },
         {
             "name": "overtrue/easy-sms",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/overtrue/easy-sms.git",
-                "reference": "966fb79683e9268c46445d70888d4c0d11314157"
+                "reference": "85040b891b9fcd20954c63889e10e7d26bf49ec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/overtrue/easy-sms/zipball/966fb79683e9268c46445d70888d4c0d11314157",
-                "reference": "966fb79683e9268c46445d70888d4c0d11314157",
+                "url": "https://api.github.com/repos/overtrue/easy-sms/zipball/85040b891b9fcd20954c63889e10e7d26bf49ec9",
+                "reference": "85040b891b9fcd20954c63889e10e7d26bf49ec9",
                 "shasum": ""
             },
             "require": {
@@ -3696,9 +3696,9 @@
             "description": "The easiest way to send short message.",
             "support": {
                 "issues": "https://github.com/overtrue/easy-sms/issues",
-                "source": "https://github.com/overtrue/easy-sms/tree/1.3.0"
+                "source": "https://github.com/overtrue/easy-sms/tree/1.3.1"
             },
-            "time": "2021-01-16T07:33:39+00:00"
+            "time": "2021-01-20T01:51:30+00:00"
         },
         {
             "name": "overtrue/socialite",
