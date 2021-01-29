@@ -35,7 +35,7 @@ class Service extends AbstractService
             $content = $easySms->send($this->phoneNumber, $sendData);
             // //Success {"juhe":{"gateway":"juhe","status":"success","result":{"reason":"\u64cd\u4f5c\u6210\u529f","result":{"sid":"1721120152805315800","fee":1,"count":1},"error_code":0}}}
         } catch (NoGatewayAvailableException $e) {
-            return $this->error($e->getCode(), $e->getMessage());
+            return $this->error($e->getLastException()->getCode(), $e->getLastException()->getMessage());
         }
 
         if ($content) {
