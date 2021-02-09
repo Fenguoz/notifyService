@@ -2,8 +2,6 @@
 
 namespace Driver\Notify;
 
-use App\Model\Queue;
-
 abstract class AbstractService
 {
 	protected $config; //消息配置
@@ -64,11 +62,6 @@ abstract class AbstractService
 
 	public function _notify()
 	{
-		if (isset($this->config['id'])) {
-			Queue::where('id', $this->config['id'])->update([
-				'status' => ($this->code == 0) ? 1 : -1
-			]);
-		}
 		return ($this->code == 0) ? true : false;
 	}
 

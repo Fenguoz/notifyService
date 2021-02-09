@@ -38,7 +38,60 @@
 
 ## 快速开始
 
-...
+### 部署
+
+``` bash
+# 克隆项目
+git clone ...
+
+# 进入根目录
+cd {file}
+
+# 安装扩展包
+composer install
+
+# 配置env文件
+cp .env.example .env
+
+# 数据迁移
+php bin/hyperf.php migrate --seed
+
+# 运行 Consul（若已运行，忽略）
+consul agent -dev -bind 127.0.0.1
+
+# 运行
+php bin/hyperf.php start
+```
+
+### 接口调用
+
+查看 **可调用接口** 详情，请查看 Swagger 文档。
+
+访问路径：public/swagger/index.html
+
+swagger文件：public/swagger/openapi.json
+
+PHP 调用示例：
+``` php
+use GuzzleHttp\Client;
+
+$host = 'http://127.0.0.1:9801';
+(new Client)->post($host, [
+    'json' => [
+        'jsonrpc' => '2.0',
+        'method' => '/notify/send',
+        'params' => [1, 'user.register', ['code' => $code, 'phone_number' => '18888888888']],
+        'id' => 1,
+    ]
+]);
+```
+
+CURL 调用示例：
+``` bash
+curl -X POST -H "Content-Type: application/json" \
+--data '{"jsonrpc":"2.0","method":"/notify/send","params":[1, "method":"/notify/send", "params":[1, "user.register", ["code" => $code, "phone_number" => "18888888888"]],"id":1}' \
+http://127.0.0.1:9801
+```
 
 ## 计划
 
