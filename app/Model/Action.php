@@ -11,6 +11,8 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $module 
  * @property string $action 
  * @property string $routing_key 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
  */
 class Action extends Model
 {
@@ -31,5 +33,5 @@ class Action extends Model
      *
      * @var array
      */
-    protected $casts = ['id' => 'integer', 'parent_id' => 'integer'];
+    protected $casts = ['id' => 'integer', 'parent_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

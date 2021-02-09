@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace App\Model;
 
 use Hyperf\DbConnection\Model\Model;
-
 /**
  * @property string $code 
  * @property string $name 
@@ -37,14 +35,12 @@ class Notify extends Model
      * @var array
      */
     protected $casts = ['status' => 'integer', 'sort' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
-
-    public static function getConfigByCode(string $code): array
+    public static function getConfigByCode(string $code) : array
     {
         $config = self::query()->where('code', $code)->value('config');
         return $config ? json_decode($config, true) : [];
     }
-    
-    public static function getStatusByCode(string $code): int
+    public static function getStatusByCode(string $code) : int
     {
         return self::query()->where('code', $code)->value('status') ?? 0;
     }

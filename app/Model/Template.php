@@ -6,8 +6,12 @@ namespace App\Model;
 use Hyperf\DbConnection\Model\Model;
 /**
  * @property int $id 
- * @property int $code 
+ * @property string $title 
+ * @property string $code 
  * @property string $content 
+ * @property string $param 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
  */
 class Template extends Model
 {
@@ -28,5 +32,5 @@ class Template extends Model
      *
      * @var array
      */
-    protected $casts = ['id' => 'integer', 'code' => 'string'];
+    protected $casts = ['id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }
