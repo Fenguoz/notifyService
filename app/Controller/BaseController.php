@@ -4,26 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Hyperf\HttpServer\Annotation\Controller;
 use App\Constants\ErrorCode;
 use App\Constants\Notify\Notify;
 use Hyperf\Guzzle\ClientFactory;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
 
-/**
- * @OA\Info(
- *     version="1.0",
- *     title="XX项目Api",
- * ),
- * @OA\Server(
- *     url="http://127.0.0.1:9501",
- *     description="本地环境"
- * )
- */
-/**
- * @Controller()
- */
 class BaseController extends AbstractController
 {
 
