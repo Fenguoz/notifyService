@@ -13,12 +13,34 @@ use App\Model\NotifyTemplate;
 use App\Rpc\NotifyServiceInterface;
 use Driver\Notify\NotifyException;
 use Hyperf\RpcServer\Annotation\RpcService;
+use OpenApi\Annotations\Get;
+use OpenApi\Annotations\JsonContent;
+use OpenApi\Annotations\Parameter;
+use OpenApi\Annotations\Post;
+use OpenApi\Annotations\Response;
 
 /**
  * @RpcService(name="NotifyService", protocol="jsonrpc-http", server="jsonrpc-http", publishTo="consul")
  */
 class NotifyService extends BaseService implements NotifyServiceInterface
 {
+    /**
+     * @Post(
+     *     path="/notify/send",
+     *     operationId="send",
+     *     tags={"NotifyService"},
+     *     summary="发送消息/通知",
+     *     description="发送消息/通知",
+     *     @Parameter(ref="#/components/parameters/code"),
+     *     @Parameter(ref="#/components/parameters/action"),
+     *     @Parameter(ref="#/components/parameters/params"),
+     *     @Response(
+     *         response=200,
+     *         description="SUCCESS",
+     *         @JsonContent(ref="#/components/schemas/success")
+     *     )
+     * )
+     */
     public function send(int $code, string $action, array $params)
     {
         list($module, $action) = explode('.', $action);
@@ -44,6 +66,23 @@ class NotifyService extends BaseService implements NotifyServiceInterface
         return $this->success();
     }
 
+    /**
+     * @Post(
+     *     path="/notify/sendBatch",
+     *     operationId="sendBatch",
+     *     tags={"NotifyService"},
+     *     summary="批量发送消息/通知",
+     *     description="批量发送消息/通知",
+     *     @Parameter(ref="#/components/parameters/code"),
+     *     @Parameter(ref="#/components/parameters/action"),
+     *     @Parameter(ref="#/components/parameters/params"),
+     *     @Response(
+     *         response=200,
+     *         description="SUCCESS",
+     *         @JsonContent(ref="#/components/schemas/success")
+     *     )
+     * )
+     */
     public function sendBatch(int $code, string $action, array $params)
     {
         list($module, $action) = explode('.', $action);
@@ -69,6 +108,23 @@ class NotifyService extends BaseService implements NotifyServiceInterface
         return $this->success();
     }
 
+    /**
+     * @Post(
+     *     path="/notify/queue",
+     *     operationId="queue",
+     *     tags={"NotifyService"},
+     *     summary="投放消息队列",
+     *     description="投放消息队列",
+     *     @Parameter(ref="#/components/parameters/action"),
+     *     @Parameter(ref="#/components/parameters/params"),
+     *     @Parameter(ref="#/components/parameters/sort"),
+     *     @Response(
+     *         response=200,
+     *         description="SUCCESS",
+     *         @JsonContent(ref="#/components/schemas/success")
+     *     )
+     * )
+     */
     public function queue(string $action, array $params, int $sort = 100)
     {
         list($module, $action) = explode('.', $action);

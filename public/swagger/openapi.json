@@ -1,15 +1,116 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "XX项目Api",
+        "title": "Article｜Microservice",
         "version": "1.0"
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:9501",
-            "description": "本地环境"
+            "url": "http://127.0.0.1:9801",
+            "description": "本地"
         }
     ],
+    "paths": {
+        "/notify/send": {
+            "post": {
+                "tags": [
+                    "NotifyService"
+                ],
+                "summary": "发送消息/通知",
+                "description": "发送消息/通知",
+                "operationId": "send",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/action"
+                    },
+                    {
+                        "$ref": "#/components/parameters/params"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/sendBatch": {
+            "post": {
+                "tags": [
+                    "NotifyService"
+                ],
+                "summary": "批量发送消息/通知",
+                "description": "批量发送消息/通知",
+                "operationId": "sendBatch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/action"
+                    },
+                    {
+                        "$ref": "#/components/parameters/params"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify/queue": {
+            "post": {
+                "tags": [
+                    "NotifyService"
+                ],
+                "summary": "投放消息队列",
+                "description": "投放消息队列",
+                "operationId": "queue",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/action"
+                    },
+                    {
+                        "$ref": "#/components/parameters/params"
+                    },
+                    {
+                        "$ref": "#/components/parameters/sort"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "components": {
         "schemas": {
             "success": {
@@ -193,6 +294,42 @@
                 "required": true,
                 "schema": {
                     "type": "string"
+                }
+            },
+            "sort": {
+                "name": "sort",
+                "in": "query",
+                "description": "排序",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "code": {
+                "name": "code",
+                "in": "query",
+                "description": "标识码",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "action": {
+                "name": "action",
+                "in": "query",
+                "description": "行为动作",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "params": {
+                "name": "params",
+                "in": "query",
+                "description": "参数",
+                "required": false,
+                "schema": {
+                    "type": "object"
                 }
             }
         },

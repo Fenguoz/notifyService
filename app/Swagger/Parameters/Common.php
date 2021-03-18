@@ -184,5 +184,14 @@
  *          type="string",
  *      )
  * )
- * 
+ * @OA\Parameter(
+ *      parameter="sort",
+ *      name="sort",
+ *      description="排序",
+ *      in="query",
+ *      required=false,
+ *      @OA\Schema(
+ *          type="integer",
+ *      )
+ * )
  */
