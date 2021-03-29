@@ -23,12 +23,13 @@ class Service extends AbstractService
     {
         $sendData = [];
         $sendData['template'] = $this->template->code;
+
         if (isset($this->param['content']) && !empty($this->param['content'])) {
             $sendData['content'] = $this->param['content'];
-            unset($this->param['content']);
+        } else {
+            $sendData['content'] = $this->replaceTemplate();
         }
         $sendData['data'] = $this->param;
-
         try {
             $easySms = new EasySms($this->config);
             // // $number = new PhoneNumber(13188888888, 31);
@@ -56,5 +57,20 @@ class Service extends AbstractService
 
     public function _return()
     {
+    }
+
+    public function replaceTemplate()
+    {
+        $content = $this->template->content;
+        if ($content && $this->templateValue) {
+            $key = [];
+            $value = [];
+            foreach ($this->templateValue as $k => $v) {
+                $key[] = $k;
+                $value[] = $v;
+            }
+            $content = str_replace($key, $value, $content);
+        }
+        return $content;
     }
 }
