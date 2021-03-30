@@ -5,14 +5,14 @@ use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Migrations\Migration;
 use Hyperf\DbConnection\Db;
 
-class CreateNotifyTable extends Migration
+class CreateNotifyConfigTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('notify', function (Blueprint $table) {
+        Schema::create('notify_config', function (Blueprint $table) {
             $table->primary('code');
             $table->string('code', 50)->nullable(false)->comment('标识码');
             $table->string('name', 50)->nullable(false)->comment('名称');
@@ -22,7 +22,7 @@ class CreateNotifyTable extends Migration
             $table->unsignedTinyInteger('sort')->default(100)->comment('排序');
             $table->timestamps();
         });
-        Db::statement("ALTER TABLE `notify` comment'消息配置'");
+        Db::statement("ALTER TABLE `notify_config` comment'消息配置'");
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateNotifyTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notify');
+        Schema::dropIfExists('notify_config');
     }
 }

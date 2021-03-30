@@ -3,7 +3,7 @@
 namespace App\Rpc;
 
 interface NotifyServiceInterface
-{
+{   
     public function send(int $code, string $action, array $params);
 
     public function sendBatch(int $code, string $action, array $params);

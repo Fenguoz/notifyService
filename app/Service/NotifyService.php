@@ -7,13 +7,12 @@ use App\Amqp\Producer\TopicProducer;
 use App\Constants\ErrorCode;
 use App\Constants\Notify\Notify;
 use App\Exception\BusinessException;
-use App\Model\Action;
-use App\Model\Notify as ModelNotify;
-use App\Model\NotifyTemplate;
+use App\Model\NotifyAction;
+use App\Model\NotifyConfig;
+use App\Model\NotifyTemplateConfig;
 use App\Rpc\NotifyServiceInterface;
 use Driver\Notify\NotifyException;
 use Hyperf\RpcServer\Annotation\RpcService;
-use OpenApi\Annotations\Get;
 use OpenApi\Annotations\JsonContent;
 use OpenApi\Annotations\Parameter;
 use OpenApi\Annotations\Post;
@@ -44,18 +43,19 @@ class NotifyService extends BaseService implements NotifyServiceInterface
     public function send(int $code, string $action, array $params)
     {
         list($module, $action) = explode('.', $action);
-        $action_id = Action::where('module', $module)
+        $action_id = NotifyAction::where('module', $module)
             ->where('action', $action)
             ->value('id');
-        if (!$action_id)
+        if (!$action_id) {
             return $this->error(ErrorCode::DATA_NOT_EXIST);
+        }
 
         $notifyCode = Notify::$__names[$code];
         try {
             $this->notify
                 ->setAdapter($notifyCode, $params)
-                ->setConfig(ModelNotify::getConfigByCode($notifyCode))
-                ->setTemplate(NotifyTemplate::getTemplate($notifyCode, (int)$action_id))
+                ->setConfig(NotifyConfig::getConfigByCode($notifyCode))
+                ->setTemplate(NotifyTemplateConfig::getTemplate($notifyCode, (int)$action_id))
                 ->templateValue()
                 ->send();
         } catch (BusinessException $e) {
@@ -86,18 +86,19 @@ class NotifyService extends BaseService implements NotifyServiceInterface
     public function sendBatch(int $code, string $action, array $params)
     {
         list($module, $action) = explode('.', $action);
-        $action_id = Action::where('module', $module)
+        $action_id = NotifyAction::where('module', $module)
             ->where('action', $action)
             ->value('id');
-        if (!$action_id)
+        if (!$action_id) {
             return $this->error(ErrorCode::DATA_NOT_EXIST);
+        }
 
         $notifyCode = Notify::$__names[$code];
         try {
             $this->notify
                 ->setAdapter($notifyCode, $params)
-                ->setConfig(ModelNotify::getConfigByCode($notifyCode))
-                ->setTemplate(NotifyTemplate::getTemplate($notifyCode, (int)$action_id))
+                ->setConfig(NotifyConfig::getConfigByCode($notifyCode))
+                ->setTemplate(NotifyTemplateConfig::getTemplate($notifyCode, (int)$action_id))
                 ->batchTemplateValue()
                 ->sendBatch();
         } catch (BusinessException $e) {
@@ -128,24 +129,25 @@ class NotifyService extends BaseService implements NotifyServiceInterface
     public function queue(string $action, array $params, int $sort = 100)
     {
         list($module, $action) = explode('.', $action);
-        $info = Action::where('module', $module)
+        $info = NotifyAction::where('module', $module)
             ->where('action', $action)
             ->first();
-        if (!$info)
+        if (!$info) {
             return $this->error(ErrorCode::DATA_NOT_EXIST);
+        }
 
         //加入消息队列
         $this->producer->produce(
             new TopicProducer(
                 json_encode($params),
-                'topic.' . $info->routing_key,
+                'topic.' . $action,
                 'topic.' . $info->module
             )
         );
         $this->producer->produce(
             new RemindProducer(
                 json_encode($params),
-                'remind.' . $info->routing_key,
+                'remind.' . $action,
                 'remind.' . $info->module
             )
         );

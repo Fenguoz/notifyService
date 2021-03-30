@@ -1,16 +1,396 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Article｜Microservice",
+        "title": "Notify｜Microservice",
         "version": "1.0"
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:9801",
+            "url": "http://127.0.0.1:9701",
             "description": "本地"
         }
     ],
     "paths": {
+        "/notify_action/getList": {
+            "post": {
+                "tags": [
+                    "NotifyActionService"
+                ],
+                "summary": "动作行为列表",
+                "description": "动作行为列表",
+                "operationId": "getList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/notify_action"
+                                }
+                            }
+                        }
+                    },
+                    "10005": {
+                        "description": "NO_DATA",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/no_data"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_action/getPagesInfo": {
+            "post": {
+                "tags": [
+                    "NotifyActionService"
+                ],
+                "summary": "动作行为分页信息",
+                "description": "动作行为分页信息",
+                "operationId": "getPagesInfo",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/pageInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_action/add": {
+            "post": {
+                "tags": [
+                    "NotifyActionService"
+                ],
+                "summary": "动作行为文章",
+                "description": "动作行为文章",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10001": {
+                        "description": "ADD_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_action/edit": {
+            "post": {
+                "tags": [
+                    "NotifyActionService"
+                ],
+                "summary": "编辑动作行为",
+                "description": "编辑动作行为",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10003": {
+                        "description": "UPDATE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_action/delete": {
+            "post": {
+                "tags": [
+                    "NotifyActionService"
+                ],
+                "summary": "删除动作行为",
+                "description": "根据主键ID删除动作行为（支持批量）",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ids"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10004": {
+                        "description": "DELETE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_config/getList": {
+            "post": {
+                "tags": [
+                    "NotifyConfigService"
+                ],
+                "summary": "消息配置列表",
+                "description": "消息配置列表",
+                "operationId": "getList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/notify_config"
+                                }
+                            }
+                        }
+                    },
+                    "10005": {
+                        "description": "NO_DATA",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/no_data"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_config/getPagesInfo": {
+            "post": {
+                "tags": [
+                    "NotifyConfigService"
+                ],
+                "summary": "消息配置分页信息",
+                "description": "消息配置分页信息",
+                "operationId": "getPagesInfo",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/pageInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_config/add": {
+            "post": {
+                "tags": [
+                    "NotifyConfigService"
+                ],
+                "summary": "添加消息配置",
+                "description": "添加消息配置",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10001": {
+                        "description": "ADD_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_config/edit": {
+            "post": {
+                "tags": [
+                    "NotifyConfigService"
+                ],
+                "summary": "编辑消息配置",
+                "description": "编辑消息配置",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10003": {
+                        "description": "UPDATE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_config/delete": {
+            "post": {
+                "tags": [
+                    "NotifyConfigService"
+                ],
+                "summary": "删除消息配置",
+                "description": "根据标识码code删除消息配置",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/code"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10004": {
+                        "description": "DELETE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/notify/send": {
             "post": {
                 "tags": [
@@ -109,6 +489,386 @@
                     }
                 }
             }
+        },
+        "/notify_template_config/getList": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateConfigService"
+                ],
+                "summary": "消息模版配置列表",
+                "description": "消息模版配置列表",
+                "operationId": "getList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/notify_template_config"
+                                }
+                            }
+                        }
+                    },
+                    "10005": {
+                        "description": "NO_DATA",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/no_data"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template_config/getPagesInfo": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateConfigService"
+                ],
+                "summary": "消息模版配置分页信息",
+                "description": "消息模版配置分页信息",
+                "operationId": "getPagesInfo",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/pageInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template_config/add": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateConfigService"
+                ],
+                "summary": "消息模版配置文章",
+                "description": "消息模版配置文章",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10001": {
+                        "description": "ADD_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template_config/edit": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateConfigService"
+                ],
+                "summary": "编辑消息模版配置",
+                "description": "编辑消息模版配置",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10003": {
+                        "description": "UPDATE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template_config/delete": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateConfigService"
+                ],
+                "summary": "删除消息模版配置",
+                "description": "根据主键ID删除消息模版配置（支持批量）",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ids"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10004": {
+                        "description": "DELETE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template/getList": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateService"
+                ],
+                "summary": "消息模版列表",
+                "description": "消息模版列表",
+                "operationId": "getList",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/notify_template"
+                                }
+                            }
+                        }
+                    },
+                    "10005": {
+                        "description": "NO_DATA",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/no_data"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template/getPagesInfo": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateService"
+                ],
+                "summary": "消息模版分页信息",
+                "description": "消息模版分页信息",
+                "operationId": "getPagesInfo",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/where_obj"
+                    },
+                    {
+                        "$ref": "#/components/parameters/count"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/pageInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template/add": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateService"
+                ],
+                "summary": "消息模版文章",
+                "description": "消息模版文章",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10001": {
+                        "description": "ADD_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template/edit": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateService"
+                ],
+                "summary": "编辑消息模版",
+                "description": "编辑消息模版",
+                "operationId": "edit",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/params_obj"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10003": {
+                        "description": "UPDATE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notify_template/delete": {
+            "post": {
+                "tags": [
+                    "NotifyTemplateService"
+                ],
+                "summary": "删除消息模版",
+                "description": "根据主键ID删除消息模版（支持批量）",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/ids"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/success"
+                                }
+                            }
+                        }
+                    },
+                    "10004": {
+                        "description": "DELETE_FAIL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -121,12 +881,12 @@
                             "id"
                         ],
                         "properties": {
-                            "status": {
+                            "code": {
                                 "description": "状态",
                                 "type": "integer",
                                 "default": "1"
                             },
-                            "msg": {
+                            "message": {
                                 "description": "信息",
                                 "type": "string",
                                 "default": "操作成功"
@@ -142,12 +902,349 @@
             },
             "error": {
                 "properties": {
-                    "status": {
+                    "code": {
                         "type": "integer",
                         "format": "int32"
                     },
-                    "msg": {
+                    "message": {
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "data": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "description": "数据",
+                                "type": "string",
+                                "default": ""
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "pageInfo": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "type": "object",
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "page": {
+                                                "description": "当前页",
+                                                "type": "integer",
+                                                "default": "1"
+                                            },
+                                            "count": {
+                                                "description": "每页条数",
+                                                "type": "integer",
+                                                "default": "10"
+                                            },
+                                            "total": {
+                                                "description": "总共条数",
+                                                "type": "integer",
+                                                "default": "0"
+                                            },
+                                            "total_page": {
+                                                "description": "总共页数",
+                                                "type": "integer",
+                                                "default": "0"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "no_data": {
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32",
+                        "default": "10005"
+                    },
+                    "message": {
+                        "type": "string",
+                        "default": "NO_DATA"
+                    }
+                },
+                "type": "object"
+            },
+            "notify_action": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "description": "数据",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/notify_action_model"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "notify_action_model": {
+                "properties": {
+                    "id": {
+                        "description": "主键ID",
+                        "type": "integer",
+                        "default": "1"
+                    },
+                    "name": {
+                        "description": "名称",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "parent_id": {
+                        "description": "父ID",
+                        "type": "integer",
+                        "default": "0"
+                    },
+                    "module": {
+                        "description": "模块",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "action": {
+                        "description": "行为标识",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "created_at": {
+                        "description": "创建时间",
+                        "type": "string",
+                        "default": ""
+                    }
+                },
+                "type": "object"
+            },
+            "notify_config": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "description": "数据",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/notify_config_model"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "notify_config_model": {
+                "properties": {
+                    "code": {
+                        "description": "标识码",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "name": {
+                        "description": "名称",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "desc": {
+                        "description": "描述",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "config": {
+                        "description": "配置",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "status": {
+                        "description": "状态 1开启 0关闭",
+                        "type": "integer",
+                        "default": "1"
+                    },
+                    "sort": {
+                        "description": "排序",
+                        "type": "integer",
+                        "default": "100"
+                    },
+                    "created_at": {
+                        "description": "创建时间",
+                        "type": "string",
+                        "default": ""
+                    }
+                },
+                "type": "object"
+            },
+            "notify_template": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "description": "数据",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/notify_template_model"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "notify_template_model": {
+                "properties": {
+                    "id": {
+                        "description": "主键ID",
+                        "type": "integer",
+                        "default": "1"
+                    },
+                    "name": {
+                        "description": "名称",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "code": {
+                        "description": "第三方标识码",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "content": {
+                        "description": "内容",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "param": {
+                        "description": "模板变量",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "created_at": {
+                        "description": "创建时间",
+                        "type": "string",
+                        "default": ""
+                    }
+                },
+                "type": "object"
+            },
+            "notify_template_config": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "properties": {
+                            "code": {
+                                "description": "状态",
+                                "type": "integer",
+                                "default": "200"
+                            },
+                            "message": {
+                                "description": "信息",
+                                "type": "string",
+                                "default": "操作成功"
+                            },
+                            "data": {
+                                "description": "数据",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/notify_template_config_model"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "notify_template_config_model": {
+                "properties": {
+                    "id": {
+                        "description": "主键ID",
+                        "type": "integer",
+                        "default": "1"
+                    },
+                    "notify_code": {
+                        "description": "标识码",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "template_id": {
+                        "description": "模版ID",
+                        "type": "integer",
+                        "default": ""
+                    },
+                    "action_id": {
+                        "description": "行为动作ID",
+                        "type": "integer",
+                        "default": ""
+                    },
+                    "created_at": {
+                        "description": "创建时间",
+                        "type": "string",
+                        "default": ""
                     }
                 },
                 "type": "object"
@@ -305,6 +1402,33 @@
                     "type": "integer"
                 }
             },
+            "where_obj": {
+                "name": "where",
+                "in": "query",
+                "description": "where条件 例:{'category_id':1}",
+                "required": false,
+                "schema": {
+                    "type": "object"
+                }
+            },
+            "order_obj": {
+                "name": "order",
+                "in": "query",
+                "description": "排序 例:{'hits':'DESC','id':'DESC'}",
+                "required": false,
+                "schema": {
+                    "type": "object"
+                }
+            },
+            "params_obj": {
+                "name": "order",
+                "in": "query",
+                "description": "参数 例:{'id': 1,'name':'hellow'}",
+                "required": false,
+                "schema": {
+                    "type": "object"
+                }
+            },
             "code": {
                 "name": "code",
                 "in": "query",
@@ -330,6 +1454,15 @@
                 "required": false,
                 "schema": {
                     "type": "object"
+                }
+            },
+            "ids": {
+                "name": "ids",
+                "in": "query",
+                "description": "主键IDs",
+                "required": false,
+                "schema": {
+                    "type": "string"
                 }
             }
         },

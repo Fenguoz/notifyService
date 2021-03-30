@@ -194,4 +194,37 @@
  *          type="integer",
  *      )
  * )
+ * 
+ * @OA\Parameter(
+ *      parameter="where_obj",
+ *      name="where",
+ *      description="where条件 例:{'category_id':1}",
+ *      in="query",
+ *      required=false,
+ *      @OA\Schema(
+ *          type="object",
+ *      )
+ * )
+ * 
+ * @OA\Parameter(
+ *      parameter="order_obj",
+ *      name="order",
+ *      description="排序 例:{'hits':'DESC','id':'DESC'}",
+ *      in="query",
+ *      required=false,
+ *      @OA\Schema(
+ *          type="object",
+ *      )
+ * )
+ * 
+ * @OA\Parameter(
+ *      parameter="params_obj",
+ *      name="order",
+ *      description="参数 例:{'id': 1,'name':'hellow'}",
+ *      in="query",
+ *      required=false,
+ *      @OA\Schema(
+ *          type="object",
+ *      )
+ * )
  */

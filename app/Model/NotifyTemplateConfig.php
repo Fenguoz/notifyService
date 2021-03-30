@@ -3,23 +3,25 @@
 declare (strict_types=1);
 namespace App\Model;
 
+use App\Constants\ErrorCode;
+use App\Exception\BusinessException;
 /**
  * @property int $id 
- * @property string $name 
- * @property string $code 
- * @property string $content 
- * @property string $param 
+ * @property string $notify_code 
+ * @property int $template_id 
+ * @property int $action_id 
  * @property string $created_at 
  * @property string $updated_at 
+ * @property-read \App\Model\NotifyTemplate $template
  */
-class NotifyTemplate extends Model
+class NotifyTemplateConfig extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'notify_template';
+    protected $table = 'notify_template_config';
     /**
      * Add nullable creation and update timestamps to the table.
      *
@@ -31,13 +33,13 @@ class NotifyTemplate extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'code', 'content', 'param'];
+    protected $fillable = ['notify_code', 'template_id', 'action_id'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected $casts = ['id' => 'integer', 'template_id' => 'integer', 'action_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     /**
      * getList
      * 
@@ -49,13 +51,9 @@ class NotifyTemplate extends Model
      */
     public function getList($where = [], $order = [], $pageSize = 0, $currentPage = 1)
     {
-        $query = $this->query()->select($this->table . '.id', $this->table . '.name', $this->table . '.code', $this->table . '.content', $this->table . '.param', $this->table . '.created_at');
+        $query = $this->query()->select($this->table . '.id', $this->table . '.notify_code', $this->table . '.template_id', $this->table . '.action_id', $this->table . '.created_at');
         // 循环增加查询条件
         foreach ($where as $k => $v) {
-            if ($k === 'name') {
-                $query = $query->where($this->table . '.' . $k, 'LIKE', '%' . $v . '%');
-                continue;
-            }
             if ($v || $v != null) {
                 $query = $query->where($this->table . '.' . $k, $v);
             }
@@ -83,13 +81,21 @@ class NotifyTemplate extends Model
     {
         $query = $this->query();
         foreach ($where as $k => $v) {
-            if ($k === 'name') {
-                $query = $query->where($this->table . '.' . $k, 'LIKE', '%' . $v . '%');
-                continue;
-            }
             $query = $query->where($this->table . '.' . $k, $v);
         }
         $query = $query->count();
         return $query > 0 ? $query : 0;
+    }
+    public function template()
+    {
+        return $this->hasOne(NotifyTemplate::class, 'id', 'template_id');
+    }
+    public static function getTemplate(string $notifyCode, int $actionId)
+    {
+        $template = self::query()->where('notify_code', $notifyCode)->where('action_id', $actionId)->first();
+        if (!$template) {
+            throw new BusinessException(ErrorCode::DATA_NOT_EXIST);
+        }
+        return $template->template;
     }
 }

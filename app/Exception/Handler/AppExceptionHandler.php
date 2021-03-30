@@ -1,13 +1,23 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://hyperf.wiki
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ */
 namespace App\Exception\Handler;
 
 use App\Exception\BusinessException;
+use Exception;
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\HttpServer\Contract\ResponseInterface as Response;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -17,6 +27,12 @@ class AppExceptionHandler extends ExceptionHandler
      * @var StdoutLoggerInterface
      */
     protected $logger;
+
+    /**
+     * @Inject()
+     * @var Response
+     */
+    protected $response;
 
     public function __construct(StdoutLoggerInterface $logger)
     {
@@ -33,13 +49,20 @@ class AppExceptionHandler extends ExceptionHandler
             // 阻止异常冒泡
             $this->stopPropagation();
             // 业务逻辑错误日志处理
-            return [
+            return $this->response->json([
                 'code' => $throwable->getCode(),
                 'message'=> $throwable->getMessage(),
-            ];
+            ]);
         }
 
-        return $response->withHeader("Server", "Hyperf")->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
+        if ($throwable instanceof Exception) {
+            $this->stopPropagation();
+            return $this->response->json([
+                'code' => $throwable->getCode(),
+                'message'=> $throwable->getMessage(),
+            ]);
+        }
+        return $response->withHeader('Server', 'Hyperf')->withStatus(500)->withBody(new SwooleStream('Internal Server Error.'));
     }
 
     public function isValid(Throwable $throwable): bool

@@ -20,7 +20,7 @@ class NotifyFactory
 		if (empty($adapter_name))
 			throw new NotifyException(ErrorCode::ADAPTER_EMPTY);
 
-		if (\App\Model\Notify::getStatusByCode($adapter_name) == 0)
+		if (\App\Model\NotifyConfig::getStatusByCode($adapter_name) == 0)
 			throw new NotifyException(ErrorCode::ADAPTER_TURN_OFF);
 
 		$class_file = BASE_PATH . '/app/Library/Driver/Notify/' . $adapter_name . '/Service.php';

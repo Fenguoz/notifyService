@@ -12,10 +12,10 @@ use OpenApi\Annotations\Server;
 /**
  * @Info(
  *     version="1.0",
- *     title="Article｜Microservice",
+ *     title="Notify｜Microservice",
  * ),
  * @Server(
- *     url="http://127.0.0.1:9801",
+ *     url="http://127.0.0.1:9701",
  *     description="本地"
  * )
  */

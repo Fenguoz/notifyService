@@ -34,5 +34,14 @@
  *          type="object",
  *      )
  * )
- * 
+ * @OA\Parameter(
+ *      parameter="ids",
+ *      name="ids",
+ *      description="主键IDs",
+ *      in="query",
+ *      required=false,
+ *      @OA\Schema(
+ *          type="string",
+ *      )
+ * )
  */

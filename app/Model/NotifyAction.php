@@ -6,38 +6,32 @@ namespace App\Model;
 /**
  * @property int $id 
  * @property string $name 
- * @property string $code 
- * @property string $content 
- * @property string $param 
+ * @property int $parent_id 
+ * @property string $module 
+ * @property string $action 
  * @property string $created_at 
  * @property string $updated_at 
  */
-class NotifyTemplate extends Model
+class NotifyAction extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'notify_template';
-    /**
-     * Add nullable creation and update timestamps to the table.
-     *
-     * @param int $precision
-     */
-    public $timestamps = false;
+    protected $table = 'notify_action';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'code', 'content', 'param'];
+    protected $fillable = ['name', 'parent_id', 'module', 'action'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected $casts = ['id' => 'integer', 'parent_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     /**
      * getList
      * 
@@ -49,7 +43,7 @@ class NotifyTemplate extends Model
      */
     public function getList($where = [], $order = [], $pageSize = 0, $currentPage = 1)
     {
-        $query = $this->query()->select($this->table . '.id', $this->table . '.name', $this->table . '.code', $this->table . '.content', $this->table . '.param', $this->table . '.created_at');
+        $query = $this->query()->select($this->table . '.id', $this->table . '.name', $this->table . '.parent_id', $this->table . '.module', $this->table . '.action', $this->table . '.created_at');
         // 循环增加查询条件
         foreach ($where as $k => $v) {
             if ($k === 'name') {
