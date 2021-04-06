@@ -2,8 +2,6 @@
 
 ## 概述
 
-----
-
 通知服务是微服务就是一个独立的实体，它可以独立被部署，也可以作为一个操作系统进程存在。服务与服务之间存在隔离性，服务之间均通过网络调用进行通信，从而加强服务之间的隔离性，避免紧耦合。
 
 该服务基于 Hyperf2.0 框架实现。通过 JSON RPC 轻量级的 RPC 协议标准，可自定义基于 HTTP 协议来传输，或直接基于 TCP 协议来传输方式实现服务注册。客户端只需要通过协议标准直接调用已封装好的方法即可。
@@ -12,16 +10,12 @@
 
 ## 环境要求
 
-----
-
 - PHP >= 7.2
 - Swoole PHP 扩展 >= 4.5，并关闭了 `Short Name`
 - Nginx
 - Consul
 
 ## 特点
-
-----
 
 1. 支持多种通知方式
 1. 一套写法兼容所有平台
@@ -42,8 +36,6 @@
 - 批量发送 `sendBatch(int $code, string $action, array $params)`
 
 ## 快速开始
-
-----
 
 ### 部署
 
@@ -213,8 +205,6 @@ $host = 'http://127.0.0.1:9801';
 
 ## 扩展包
 
-----
-
 | 扩展包名 | 描述 | 应用场景 |
 | :-----| :---- | :---- |
 | [yurunsoft/phpmailer-swoole](https://github.com/Yurunsoft/PHPMailer-Swoole) | Swoole 协程环境下的可用的 PHPMailer | 发送邮箱通知 |
@@ -223,8 +213,6 @@ $host = 'http://127.0.0.1:9801';
 | [getuilaboratory/getui-pushapi-php-client](https://github.com/GetuiLaboratory/getui-pushapi-php-client) | APP应用消息推送SDK | APP站内推送通知 |
 
 ## 脚本命令
-
-----
 
 | 命令行 | 说明 | crontab |
 | :-----| :---- | :---- |
