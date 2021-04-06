@@ -11,21 +11,29 @@ use Hyperf\Guzzle\CoroutineHandler;
 
 class Service extends AbstractService
 {
-    protected $key;
-    protected $url;
-    protected $phone_number;
-
+    protected $data;
+    protected $template;
     public function __construct($param)
     {
-        $this->param = $param;
+        if (empty($param)) {
+            return $this->error(500, 'Parameter cannot be empty');
+        }
+        if (!isset($param['data']) || empty($param['data'])) {
+            return $this->error(500, 'data cannot be empty');
+        }
+        if (!isset($param['template']) || empty($param['template'])) {
+            return $this->error(500, 'template cannot be empty');
+        }
+        $this->data = $param['data'];
+        $this->template = $param['template'];
     }
 
     public function send()
     {
-        if (!isset($this->param['openid']) || empty($this->param['openid']))
+        if (!isset($this->data['openid']) || empty($this->data['openid']))
             return $this->error(ErrorCode::DATA_NOT_EXIST);
 
-        if (!isset($this->param['data']) || empty($this->param['data']))
+        if (!isset($this->data['data']) || empty($this->data['data']))
             return $this->error(ErrorCode::DATA_NOT_EXIST);
 
         $app = Factory::officialAccount($this->config['officialAccount']);
@@ -36,22 +44,25 @@ class Service extends AbstractService
         $app['guzzle_handler'] = $handler;
 
         $sendData = [];
-        $sendData['template_id'] = $this->template->code;
-        if ($this->param['openid']) $sendData['touser'] = $this->param['openid'];
+        $sendData['template_id'] = $this->template;
+        if ($this->data['openid']) {
+            $sendData['touser'] = $this->data['openid'];
+        }
 
         // 如果 url 和 miniprogram 字段都传，会优先跳转小程序。
-        if (isset($this->param['url']) && !empty($this->param['url']))
-            $sendData['url'] = $this->param['url'];
-        if (isset($this->param['miniprogram_path']) && !empty($this->param['miniprogram_path'])) {
+        if (isset($this->data['url']) && !empty($this->data['url'])) {
+            $sendData['url'] = $this->data['url'];
+        }
+        if (isset($this->data['miniprogram_path']) && !empty($this->data['miniprogram_path'])) {
             $sendData['miniprogram']['appid'] = $this->config['miniProgram']['app_id'];
-            $sendData['miniprogram']['pagepath'] = $this->param['miniprogram_path'];
+            $sendData['miniprogram']['pagepath'] = $this->data['miniprogram_path'];
         }
 
         // $sendData['data'] = [
         //     'keyword1' => 'VALUE',
         //     'keyword2' => 'VALUE2',
         // ];
-        if ($this->param['data']) $sendData['data'] = $this->param['data'];
+        if ($this->data['data']) $sendData['data'] = $this->data['data'];
 
         $content = $app->template_message->send($sendData);
         // // Success  {"errcode":0,"errmsg":"ok","msgid":1619409037345800198}

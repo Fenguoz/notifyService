@@ -7,15 +7,33 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Service extends AbstractService
 {
-    protected $emails;
+    protected $data;
+    protected $content;
 
     public function __construct($param)
     {
-        $this->param = $param;
+        if (empty($param)) {
+            return $this->error(500, 'Parameter cannot be empty');
+        }
+        if (!isset($param['data']) || empty($param['data'])) {
+            return $this->error(500, 'data cannot be empty');
+        }
+        if (!isset($param['content']) || empty($param['content'])) {
+            return $this->error(500, 'content cannot be empty');
+        }
+        $this->data = $param['data'];
+        $this->content = $param['content'];
     }
 
     public function send()
     {
+        if (!isset($this->data['address'])) {
+            return $this->error(500, 'address cannot be empty');
+        }
+        if (!isset($this->data['title'])) {
+            return $this->error(500, 'title cannot be empty');
+        }
+
         $channel = new \Swoole\Coroutine\Channel();
         co(function () use ($channel) {
             $mail = new PHPMailer; //PHPMailer对象
@@ -29,9 +47,9 @@ class Service extends AbstractService
             $mail->Username = $this->config['username']; // SMTP服务器用户名
             $mail->Password = $this->config['password']; // SMTP服务器密码
             $mail->SetFrom($this->config['send_mail'], $this->config['send_nickname']); // 邮箱，昵称
-            $mail->Subject = $this->template->title;
-            $mail->MsgHTML($this->replaceTemplate());
-            $mail->AddAddress($this->param['address']); // 收件人
+            $mail->Subject = $this->data['title'];
+            $mail->MsgHTML($this->content);
+            $mail->AddAddress($this->data['address']); // 收件人
             if ($this->config['attachment']) {
                 $mail->addAttachment(BASE_PATH . $this->config['attachment']);
             }
@@ -54,20 +72,5 @@ class Service extends AbstractService
 
     public function _return()
     {
-    }
-
-    public function replaceTemplate()
-    {
-        $content = $this->template->content;
-        if ($content && $this->templateValue) {
-            $key = [];
-            $value = [];
-            foreach ($this->templateValue as $k => $v) {
-                $key[] = $k;
-                $value[] = $v;
-            }
-            $content = str_replace($key, $value, $content);
-        }
-        return $content;
     }
 }

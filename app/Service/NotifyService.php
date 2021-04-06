@@ -2,64 +2,34 @@
 
 namespace App\Service;
 
-use App\Amqp\Producer\RemindProducer;
-use App\Amqp\Producer\TopicProducer;
 use App\Constants\ErrorCode;
 use App\Constants\Notify\Notify;
-use App\Exception\BusinessException;
-use App\Model\NotifyAction;
-use App\Model\NotifyConfig;
-use App\Model\NotifyTemplateConfig;
 use App\Rpc\NotifyServiceInterface;
 use Driver\Notify\NotifyException;
 use Hyperf\RpcServer\Annotation\RpcService;
-use OpenApi\Annotations\JsonContent;
-use OpenApi\Annotations\Parameter;
-use OpenApi\Annotations\Post;
-use OpenApi\Annotations\Response;
 
 /**
  * @RpcService(name="NotifyService", protocol="jsonrpc-http", server="jsonrpc-http", publishTo="consul")
  */
 class NotifyService extends BaseService implements NotifyServiceInterface
 {
+
     /**
-     * @Post(
-     *     path="/notify/send",
-     *     operationId="send",
-     *     tags={"NotifyService"},
-     *     summary="发送消息/通知",
-     *     description="发送消息/通知",
-     *     @Parameter(ref="#/components/parameters/code"),
-     *     @Parameter(ref="#/components/parameters/action"),
-     *     @Parameter(ref="#/components/parameters/params"),
-     *     @Response(
-     *         response=200,
-     *         description="SUCCESS",
-     *         @JsonContent(ref="#/components/schemas/success")
-     *     )
-     * )
+     * Send a single notification message
+     *
+     * @param string    $notifyDriver   Notify driver
+     * @param array     $config         Notify config
+     * @param array     $params         Parameter data
+     * @return bool
      */
-    public function send(int $code, string $action, array $params)
+    public function send(string $notifyDriver, array $config, array $params)
     {
-        list($module, $action) = explode('.', $action);
-        $action_id = NotifyAction::where('module', $module)
-            ->where('action', $action)
-            ->value('id');
-        if (!$action_id) {
+        if (!in_array($notifyDriver, Notify::$__names)) {
             return $this->error(ErrorCode::DATA_NOT_EXIST);
         }
 
-        $notifyCode = Notify::$__names[$code];
         try {
-            $this->notify
-                ->setAdapter($notifyCode, $params)
-                ->setConfig(NotifyConfig::getConfigByCode($notifyCode))
-                ->setTemplate(NotifyTemplateConfig::getTemplate($notifyCode, (int)$action_id))
-                ->templateValue()
-                ->send();
-        } catch (BusinessException $e) {
-            return $this->error($e->getCode());
+            $this->notify->setAdapter($notifyDriver, $params)->setConfig($config)->send();
         } catch (NotifyException $e) {
             return $this->error($e->getCode(), $e->getMessage());
         }
@@ -67,90 +37,24 @@ class NotifyService extends BaseService implements NotifyServiceInterface
     }
 
     /**
-     * @Post(
-     *     path="/notify/sendBatch",
-     *     operationId="sendBatch",
-     *     tags={"NotifyService"},
-     *     summary="批量发送消息/通知",
-     *     description="批量发送消息/通知",
-     *     @Parameter(ref="#/components/parameters/code"),
-     *     @Parameter(ref="#/components/parameters/action"),
-     *     @Parameter(ref="#/components/parameters/params"),
-     *     @Response(
-     *         response=200,
-     *         description="SUCCESS",
-     *         @JsonContent(ref="#/components/schemas/success")
-     *     )
-     * )
+     * Send multiple notification messages
+     *
+     * @param string    $notifyDriver   Notify driver
+     * @param array     $config         Notify config
+     * @param array     $params         Parameter data
+     * @return bool
      */
-    public function sendBatch(int $code, string $action, array $params)
+    public function sendBatch(string $notifyDriver, array $config, array $params)
     {
-        list($module, $action) = explode('.', $action);
-        $action_id = NotifyAction::where('module', $module)
-            ->where('action', $action)
-            ->value('id');
-        if (!$action_id) {
+        if (!in_array($notifyDriver, Notify::$__names)) {
             return $this->error(ErrorCode::DATA_NOT_EXIST);
         }
 
-        $notifyCode = Notify::$__names[$code];
         try {
-            $this->notify
-                ->setAdapter($notifyCode, $params)
-                ->setConfig(NotifyConfig::getConfigByCode($notifyCode))
-                ->setTemplate(NotifyTemplateConfig::getTemplate($notifyCode, (int)$action_id))
-                ->batchTemplateValue()
-                ->sendBatch();
-        } catch (BusinessException $e) {
-            return $this->error($e->getCode());
+            $this->notify->setAdapter($notifyDriver, $params)->setConfig($config)->sendBatch();
         } catch (NotifyException $e) {
             return $this->error($e->getCode(), $e->getMessage());
         }
-        return $this->success();
-    }
-
-    /**
-     * @Post(
-     *     path="/notify/queue",
-     *     operationId="queue",
-     *     tags={"NotifyService"},
-     *     summary="投放消息队列",
-     *     description="投放消息队列",
-     *     @Parameter(ref="#/components/parameters/action"),
-     *     @Parameter(ref="#/components/parameters/params"),
-     *     @Parameter(ref="#/components/parameters/sort"),
-     *     @Response(
-     *         response=200,
-     *         description="SUCCESS",
-     *         @JsonContent(ref="#/components/schemas/success")
-     *     )
-     * )
-     */
-    public function queue(string $action, array $params, int $sort = 100)
-    {
-        list($module, $action) = explode('.', $action);
-        $info = NotifyAction::where('module', $module)
-            ->where('action', $action)
-            ->first();
-        if (!$info) {
-            return $this->error(ErrorCode::DATA_NOT_EXIST);
-        }
-
-        //加入消息队列
-        $this->producer->produce(
-            new TopicProducer(
-                json_encode($params),
-                'topic.' . $action,
-                'topic.' . $info->module
-            )
-        );
-        $this->producer->produce(
-            new RemindProducer(
-                json_encode($params),
-                'remind.' . $action,
-                'remind.' . $info->module
-            )
-        );
         return $this->success();
     }
 }

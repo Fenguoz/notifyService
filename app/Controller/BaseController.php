@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Constants\ErrorCode;
-use App\Constants\Notify\Notify;
 use Hyperf\Guzzle\ClientFactory;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
@@ -65,10 +64,31 @@ class BaseController extends AbstractController
     public function index()
     {
         $service = new \App\Service\NotifyService();
+
+        $notifyDriver = 'Sms';
+        $config = [
+            'default' => [
+                'gateways' => ['moduyun']
+            ],
+            'gateways' => [
+                'moduyun' => [
+                    'signId' => '****',
+                    'accesskey' => '****',
+                    'secretkey' => '****',
+                ]
+            ]
+        ];
+
         $code = rand(100000, 999999);
-        return $service->send(Notify::Sms, 'public.register', [
-            'code' => $code,
-            'phone_number' => '18888888888'
-        ]);
+        $params = [
+            'template' => '****',
+            'content' => '',
+            'data' => [
+                'code' => $code,
+                'phone_number' => '18888888888'
+            ],
+        ];
+
+        return $service->send($notifyDriver, $config, $params);
     }
 }

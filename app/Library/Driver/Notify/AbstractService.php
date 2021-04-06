@@ -5,51 +5,12 @@ namespace Driver\Notify;
 abstract class AbstractService
 {
 	protected $config; //消息配置
-	protected $template; //模版信息
-	protected $param; //参数
-	protected $templateValue; //模版值 #code# => 123456
 	protected $message;
 	protected $code;
-	protected $account;
 
 	public function setConfig($config)
 	{
 		$this->config = $config;
-		return $this;
-	}
-
-	public function setTemplate($template)
-	{
-		$this->template = $template;
-		return $this;
-	}
-
-	public function templateValue()
-	{
-		if ($this->template->param) {
-			$template_param = json_decode($this->template->param, true);
-			foreach ($template_param as $replace_str => $variable) {
-				if (isset($this->param[$variable])) $this->templateValue[$replace_str] = $this->param[$variable];
-			}
-		}
-		return $this;
-	}
-
-	public function batchTemplateValue()
-	{
-		if ($this->template->param) {
-			$template_param = json_decode($this->template->param, true);
-			foreach ($this->param as $account => $param) {
-				$item = [];
-				foreach ($template_param as $replace_str => $variable) {
-					if (isset($param[$variable])) {
-						$this->account[] = $account;
-						$item[$replace_str] = $param[$variable];
-					}
-				}
-				if ($item) $this->templateValue[] = $item;
-			}
-		}
 		return $this;
 	}
 

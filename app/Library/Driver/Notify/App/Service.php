@@ -1,28 +1,43 @@
 <?php
 
-namespace Driver\Notify\GeTui;
+namespace Driver\Notify\App;
 
 use Driver\Notify\AbstractService;
 
 class Service extends AbstractService
 {
-    protected $key;
-    protected $url;
-    protected $phone_number;
-
+    protected $data;
+    protected $content;
     public function __construct($param)
     {
-        $this->param = $param;
+        if (empty($param)) {
+            return $this->error(500, 'Parameter cannot be empty');
+        }
+        if (!isset($param['data']) || empty($param['data'])) {
+            return $this->error(500, 'data cannot be empty');
+        }
+        if (!isset($param['content']) || empty($param['content'])) {
+            return $this->error(500, 'content cannot be empty');
+        }
+        $this->data = $param['data'];
+        $this->content = $param['content'];
     }
 
     public function send()
     {
+        if (!isset($this->data['title'])) {
+            return $this->error(500, 'title cannot be empty');
+        }
+        if (!isset($this->data['client_id'])) {
+            return $this->error(500, 'client_id cannot be empty');
+        }
+
         $igt = new \IGeTui('', $this->config['app_key'], $this->config['master_secret']);
 
         header("content-type:text/html;charset='utf-8'");
         //消息模版：
         // 4.NotyPopLoadTemplate：通知弹框下载功能模板
-        $template = $this->IGtNotyPopLoadTemplate($this->template->title, $this->template->content);
+        $template = $this->IGtNotyPopLoadTemplate($this->data['title'], $this->content);
 
         //定义"SingleMessage"
         $message = new \IGtSingleMessage();
@@ -33,7 +48,7 @@ class Service extends AbstractService
         //接收方
         $target = new \IGtTarget();
         $target->set_appId($this->config['app_id']);
-        $target->set_clientId($this->param['client_id']);
+        $target->set_clientId($this->data['client_id']);
 
         try {
             $rep = $igt->pushMessageToSingle($message, $target);
