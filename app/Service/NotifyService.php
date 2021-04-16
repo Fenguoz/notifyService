@@ -126,9 +126,9 @@ class NotifyService extends BaseService implements NotifyServiceInterface
      *     )
      * )
      */
-    public function queue(string $action, array $params, int $sort = 100)
+    public function queue(string $key, array $params, int $sort = 100)
     {
-        list($module, $action) = explode('.', $action);
+        list($module, $action) = explode('.', $key);
         $info = NotifyAction::where('module', $module)
             ->where('action', $action)
             ->first();
@@ -140,14 +140,14 @@ class NotifyService extends BaseService implements NotifyServiceInterface
         $this->producer->produce(
             new TopicProducer(
                 json_encode($params),
-                'topic.' . $action,
+                'topic.' . $key,
                 'topic.' . $info->module
             )
         );
         $this->producer->produce(
             new RemindProducer(
                 json_encode($params),
-                'remind.' . $action,
+                'remind.' . $key,
                 'remind.' . $info->module
             )
         );
