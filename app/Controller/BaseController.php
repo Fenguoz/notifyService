@@ -66,7 +66,7 @@ class BaseController extends AbstractController
     {
         $service = new \App\Service\NotifyService();
         $code = rand(100000, 999999);
-        return $service->send(Notify::Sms, 'public.register', [
+        return $service->send(Notify::Sms, 'user.register', [
             'code' => $code,
             'phone_number' => '18888888888'
         ]);
